@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * SpringBoot启动程序
- * @author xuduo
+ * @author junior
  *
  */
 @SpringBootApplication
