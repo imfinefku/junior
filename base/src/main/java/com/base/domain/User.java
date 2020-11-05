@@ -1,12 +1,16 @@
 package com.base.domain;
 
+import java.io.Serializable;
+
 /**
  * 用户实体类 对应数据库表sys_user
  * 
- * @author xd
+ * @author junior
  * 
  */
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 86907990065964328L;
 
 	private String id;
 	/** 用户名 */
@@ -56,5 +60,12 @@ public class User {
 
 	public void setRole(int role) {
 		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer str = new StringBuffer();
+		str.append(id).append(username).append(password).append(name).append(role);
+		return str.toString();
 	}
 }
