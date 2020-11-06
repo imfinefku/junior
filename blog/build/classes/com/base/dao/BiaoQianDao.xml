@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.base.dao.BiaoQianDao">
+	<select id="getData" parameterType="HashMap" resultType="com.base.bean.BiaoQian">
+		select *
+		from biaoqian
+		order by inserttime desc
+		limit #{start},#{limit}
+	</select>
+	<select id="getDataTotal" parameterType="HashMap" resultType="Integer">
+		select count(*)
+		from biaoqian
+	</select>
+	<insert id="insert" parameterType="com.base.bean.BiaoQian" >
+		insert 
+		into biaoqian(id,name,inserttime)
+		values(#{id},#{name},#{inserttime})
+	</insert>
+	<delete id="delete" parameterType="HashMap" >
+		delete
+		from biaoqian
+		where id=#{id}
+	</delete>
+	<update id="update" parameterType="com.base.bean.BiaoQian" >
+		update
+		biaoqian
+		set name=#{name}
+		where id=#{id}
+	</update>
+	<select id="getLabelCount" resultType="HashMap">
+		select *
+		from 
+		(select b.id id,b.name name,count(*) sum
+		from text t,biaoqian b
+		where t.tag=b.id
+		group by b.id,b.name
+		) a
+		order by a.sum desc
+	</select>
+</mapper> 

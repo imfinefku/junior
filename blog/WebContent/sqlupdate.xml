@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql>
+	<update version="1">
+		<!-- 登录表，对应bean：LoginInfo -->
+		CREATE TABLE `logininfo` (
+		`id` varchar(36) NOT NULL,
+		`username`
+		varchar(50) DEFAULT NULL,
+		`password` varchar(50) DEFAULT NULL,
+		`name`
+		varchar(20) DEFAULT NULL,
+		`type` varchar(10) DEFAULT NULL,
+		PRIMARY KEY
+		(`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+	<update version="2">
+		INSERT INTO `logininfo` VALUES ('root', 'admin',
+		'admin', '超级管理员', '1');
+	</update>
+	<update version="3">
+		<!-- 前台标题表，对应bean：Title -->
+		CREATE TABLE `title` (
+		`id` varchar(36) NOT NULL,
+		`name` varchar(20) DEFAULT NULL,
+		`introduce` varchar(100) DEFAULT NULL,
+		`path` varchar(100) DEFAULT NULL,
+		`sort` bigint(8) DEFAULT NULL,
+		`inserttime` bigint(8) DEFAULT NULL,
+		PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+	<update version="4">
+		<!-- 标签表，对应bean：Tag -->
+		CREATE TABLE `biaoqian` (
+		`id` varchar(36) NOT NULL,
+		`name` varchar(20) DEFAULT NULL,
+		`inserttime` bigint(8) DEFAULT NULL,
+		PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+	<update version="5">
+	    <!-- 文章表，对应bean：Text -->
+        CREATE TABLE `text` (
+        `id` varchar(36) NOT NULL,
+        `title` varchar(100) DEFAULT NULL,
+        `image` varchar(100) DEFAULT NULL,
+        `introduce` varchar(200) DEFAULT NULL,
+        `content` MEDIUMTEXT DEFAULT NULL,
+        `textType` varchar(36) DEFAULT NULL,
+        `iftop` int(4) DEFAULT NULL,
+        `ifcarousel` int(4) DEFAULT NULL,
+        `insertTime` bigint(8) DEFAULT NULL,
+        `dianji` bigint(8) DEFAULT NULL,
+        `dianzan` bigint(8) DEFAULT NULL,
+        `author` varchar(36) DEFAULT NULL,
+        `tag` varchar(36) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+	<update version="6">
+	   <!--  友链表，对应bean：Friend -->
+        CREATE TABLE `friend` (
+        `id` varchar(36) NOT NULL,
+        `url` varchar(30) DEFAULT NULL,
+        `name` varchar(20) DEFAULT NULL,
+        `remarks` varchar(100) DEFAULT NULL,
+        `sort` int(4) DEFAULT NULL,
+        `inserttime` bigint(8) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+	<update version="7">
+		CREATE TABLE `liuyan` (
+  		`id` varchar(36) NOT NULL,
+  		`name` varchar(20) DEFAULT NULL,
+  		`email` varchar(100) DEFAULT NULL,
+  		`content` varchar(1000) DEFAULT NULL,
+  		`zan` bigint(8) DEFAULT NULL,
+  		`cai` bigint(8) DEFAULT NULL,
+  		`lytype` int(4) DEFAULT NULL,
+  		`type` int(4) DEFAULT NULL,
+  		`ssly` varchar(36) DEFAULT NULL,
+  		`sstext` varchar(36) DEFAULT NULL,
+  		`time` bigint(8) DEFAULT NULL,
+  		`ip` varchar(36) DEFAULT NULL,
+  		PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</update>
+</sql>

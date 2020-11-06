@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.base.dao.TextDao">
+	<select id="getTextFy" parameterType="HashMap" resultType="HashMap">
+		select text.*,title.name titlename,biaoqian.name biaoqianname
+		from text text
+		left join title
+		on text.textType=title.id
+		left join biaoqian
+		on text.tag=biaoqian.id
+		order by text.ifcarousel desc,text.iftop desc,text.dianzan desc,text.dianji desc,text.insertTime desc
+		limit #{start},#{limit}
+	</select>
+	<select id="getTextFyTotal" parameterType="HashMap" resultType="Integer">
+		select count(*)
+		from text
+	</select>
+	<select id="getTextType" resultType="com.base.bean.Title">
+		select id,name
+        from title
+	</select>
+	<insert id="insertText" parameterType="com.base.bean.Text">
+        insert into text(id,title,image,introduce,content,textType,
+        iftop,ifcarousel,insertTime,dianji,dianzan,author,tag)
+        values(#{id},#{title},#{image},#{introduce},#{content},
+        #{textType},#{iftop},#{ifcarousel},#{insertTime},#{dianji},#{dianzan},#{author},#{tag})
+    </insert>
+    <update id="updateText" parameterType="com.base.bean.Text">
+        update text
+        set title=#{title},image=#{image},introduce=#{introduce},
+        content=#{content},textType=#{textType},iftop=#{iftop},ifcarousel=#{ifcarousel},tag=#{tag}
+        where id=#{id}
+    </update>
+    <select id="getTextById" parameterType="HashMap" resultType="HashMap">
+        select *,bq.name tagname,tit.name titlename
+        from text tex,biaoqian bq,title tit
+        where tex.tag=bq.id
+        and tex.textType=tit.id
+        and tex.id=#{id}
+    </select>
+    <delete id="deleteText" parameterType="HashMap">
+        delete from text
+        where id=#{id}
+    </delete>
+    <select id="getTag" resultType="com.base.bean.BiaoQian">
+    	select id,name
+    	from biaoqian
+    </select>
+    <select id="getCarousel" parameterType="HashMap" resultType="com.base.bean.Text">
+    	select *
+    	from text
+    	where ifcarousel=1
+    	order by insertTime desc
+    	limit 0,${max}
+    </select>
+    <select id="getTop" parameterType="HashMap" resultType="com.base.bean.Text">
+    	select *
+    	from text
+    	where iftop=1
+    	order by insertTime desc
+    	limit 0,${max}
+    </select>
+    <select id="getNew" parameterType="HashMap" resultType="HashMap">
+    	select tex.id id,tex.title title,tex.introduce introduce,tex.image image,
+    	tex.insertTime inserttime,tex.dianji djl,tex.author author,bq.id tagid,bq.name tagname,
+    	til.id titleid,til.name titlename
+    	from text tex
+    	left join title til
+    	on tex.textType=til.id
+    	left join biaoqian bq
+    	on tex.tag=bq.id
+    	order by insertTime desc
+    	limit #{start},#{limit}
+    </select>
+    <select id="getNewTotal" parameterType="HashMap" resultType="Integer">
+    	select count(*)
+    	from text
+    </select>
+    <select id="getDataByType" parameterType="HashMap" resultType="HashMap">
+    	select tex.id id,tex.title title,tex.introduce introduce,tex.image image,
+    	tex.insertTime inserttime,tex.dianji djl,tex.author author,bq.id tagid,bq.name tagname,
+    	til.id titleid,til.name titlename
+    	from text tex
+    	left join title til
+    	on tex.textType=til.id
+    	left join biaoqian bq
+    	on tex.tag=bq.id
+    	where tex.textType=#{textType}
+    	order by insertTime desc
+    	limit #{start},#{limit}
+    </select>
+    <select id="getDataByTypeTotal" parameterType="HashMap" resultType="Integer">
+    	select count(*)
+    	from text
+    	where textType=#{textType}
+    </select>
+    <update id="updateTextDjl" parameterType="HashMap">
+    	update text
+    	set dianji=dianji+1
+    	where id=#{id}
+    </update>
+    <select id="getLastById" parameterType="HashMap" resultType="com.base.bean.Text">
+		select *
+    	from text
+    	where insertTime&lt;=#{insertTime}
+    	and id!=#{id}
+    	order by insertTime desc
+    	limit 0,1
+    </select>
+   	<select id="getNextById" parameterType="HashMap" resultType="com.base.bean.Text">
+    	select *
+    	from text
+    	where insertTime&gt;=#{insertTime}
+    	and id!=#{id}
+    	order by insertTime
+    	limit 0,1
+    </select>
+    <select id="getDjphData" resultType="com.base.bean.Text">
+    	select *
+    	from text
+    	order by dianji desc
+    	limit 0,5
+    </select>
+    <select id="getFyTextByFlOrSearch" parameterType="HashMap" resultType="HashMap">
+        select tex.id id,tex.title title,tex.introduce introduce,tex.image image,
+    	tex.insertTime inserttime,tex.dianji djl,tex.author author,bq.id tagid,bq.name tagname,
+    	til.id titleid,til.name titlename
+    	from text tex
+    	left join title til
+    	on tex.textType=til.id
+    	left join biaoqian bq
+    	on tex.tag=bq.id
+    	<where>
+			<if test="content!=null and content!=''">
+				 (lower(tex.title) like lower(${content}) or lower(tex.introduce) like lower(${content})) 
+			</if>
+			<if test="tag!=null and tag!=''">
+				 and tex.tag=#{tag}
+			</if>
+		</where>
+    	order by tex.insertTime desc
+    	limit #{start},#{limit}
+	</select>
+	<select id="getFyTextByFlOrSearchTotal" parameterType="HashMap" resultType="Integer">
+        select count(*)
+    	from text tex
+    	left join title til
+    	on tex.textType=til.id
+    	left join biaoqian bq
+    	on tex.tag=bq.id
+    	<where>
+			<if test="content!=null and content!=''">
+				 (lower(tex.title) like lower(${content}) or lower(tex.introduce) like lower(${content})) 
+			</if>
+			<if test="tag!=null and tag!=''">
+				 and tex.tag=#{tag}
+			</if>
+		</where>
+	</select>
+</mapper> 

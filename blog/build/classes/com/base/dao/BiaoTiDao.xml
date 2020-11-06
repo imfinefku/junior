@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.base.dao.BiaoTiDao">
+	<select id="getData" parameterType="HashMap" resultType="com.base.bean.Title">
+		select *
+		from title
+		order by sort desc
+		limit #{start},#{limit}
+	</select>
+	<select id="getDataTotal" parameterType="HashMap" resultType="Integer">
+		select count(*)
+		from title
+	</select>
+	<delete id="delete" parameterType="HashMap">
+		delete
+		from title
+		where id=#{id}
+	</delete>
+	<insert id="insertTitle" parameterType="com.base.bean.Title">
+		insert
+		into title(id,name,introduce,path,sort,inserttime)
+		values(#{id},#{name},#{introduce},#{path},#{sort},#{inserttime})
+	</insert>
+	<update id="updateTitle" parameterType="com.base.bean.Title">
+		update 
+		title
+		set name=#{name},introduce=#{introduce},path=#{path},sort=#{sort}
+		where id=#{id}
+	</update>
+	<select id="getTitleList" resultType="com.base.bean.Title">
+		select id,name,path
+		from title
+		order by sort desc
+	</select>
+</mapper> 
