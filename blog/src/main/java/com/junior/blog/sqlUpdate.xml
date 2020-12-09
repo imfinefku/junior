@@ -1,11 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<version version="1.0">
+<sql>
+CREATE TABLE `b_blog` (
+  `id` varchar(36) NOT NULL,
+  `title` varchar(30) DEFAULT NULL,
+  `content` text,
+  `tag_id` varchar(36) DEFAULT NULL,
+  `likenum` bigint(20) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `addtime` bigint(20) DEFAULT NULL,
+  `updatetime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `b_message` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `message` varchar(200) DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
+  `blog_id` varchar(36) DEFAULT NULL,
+  `reply` int(11) DEFAULT NULL,
+  `message_id` varchar(36) DEFAULT NULL,
+  `addtime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `b_tag` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_friend` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `url` varchar(100) DEFAULT NULL,
+  `orders` int(11) DEFAULT NULL,
+  `addtime` bigint(20) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_friend_apply` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `url` varchar(100) DEFAULT NULL,
+  `applytime` bigint(20) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_menu` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `link` varchar(100) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  `pid` varchar(36) DEFAULT NULL,
+  `orders` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_role` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_role_menu` (
+  `id` varchar(36) NOT NULL,
+  `role_id` varchar(36) DEFAULT NULL,
+  `menu_id` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+CREATE TABLE `sys_subscribe` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
 <sql>
 CREATE TABLE `sys_user` (
-`id`  varchar(36) NOT NULL ,
-`name`  varchar(10) NOT NULL ,
-`username`  varchar(20) NOT NULL ,
-`password`  varchar(61) NOT NULL ,
-`role`  smallint UNSIGNED NULL ,
-PRIMARY KEY (`id`)
-);
+  `id` varchar(36) NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `username` varchar(20) NOT NULL unique,
+  `password` varchar(20) DEFAULT NULL,
+  `role_id` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 </sql>
+<sql>
+CREATE TABLE `sys_version` (
+  `id` varchar(36) NOT NULL,
+  `version` decimal(10,2) DEFAULT NULL,
+  `addtime` bigint(20) DEFAULT NULL,
+  `updatetime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+<sql>
+INSERT INTO `sys_user` VALUES ('69bcb3d7-3606-11eb-9473-002b67b20186', 'admin', 'admin', 'admin', '779a51e8-3606-11eb-9473-002b67b20186');
+INSERT INTO `sys_role` VALUES ('779a51e8-3606-11eb-9473-002b67b20186', '超级管理员');
+INSERT INTO `sys_role_menu` VALUES ('afa478c6-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', '8d225fde-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47a1e-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'b3315a05-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47a7a-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'bb0f1e45-35f9-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47aa7-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'bb3642b4-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47af0-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'bfd01b81-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47b21-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'c04c292a-35f9-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47b4a-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'c3846961-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47b71-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'c5b309aa-35f9-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47bb0-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'c72d4730-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47bd9-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'cac414fc-35f9-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47c00-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'cbc7508b-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47c28-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'cf690eba-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47c52-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'd375a426-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47c84-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'd71199d4-35f8-11eb-9473-002b67b20186');
+INSERT INTO `sys_role_menu` VALUES ('afa47cac-3608-11eb-9473-002b67b20186', '779a51e8-3606-11eb-9473-002b67b20186', 'db4a3572-35f8-11eb-9473-002b67b20186');
+insert into sys_menu(id,name,link,level,pid,orders)
+values('8d225fde-35f8-11eb-9473-002b67b20186','控制台','/html/control.html',1,'',1);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('b3315a05-35f8-11eb-9473-002b67b20186','博客管理','',1,'',2);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('bb3642b4-35f8-11eb-9473-002b67b20186','标签管理','/html/tagManage.html',2,'b3315a05-35f8-11eb-9473-002b67b20186',1);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('bfd01b81-35f8-11eb-9473-002b67b20186','博客管理','/html/blogManage.html',2,'b3315a05-35f8-11eb-9473-002b67b20186',2);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('c3846961-35f8-11eb-9473-002b67b20186','留言管理','',2,'b3315a05-35f8-11eb-9473-002b67b20186',3);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('c72d4730-35f8-11eb-9473-002b67b20186','留言板','/html/messageBoard.html',3,'c3846961-35f8-11eb-9473-002b67b20186',1);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('cbc7508b-35f8-11eb-9473-002b67b20186','博客留言','/html/blogMessage.html',3,'c3846961-35f8-11eb-9473-002b67b20186',2);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('cf690eba-35f8-11eb-9473-002b67b20186','订阅管理','/html/subscribeManage.html',2,'b3315a05-35f8-11eb-9473-002b67b20186',4);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('d375a426-35f8-11eb-9473-002b67b20186','系统管理','',1,'',3);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('d71199d4-35f8-11eb-9473-002b67b20186','用户管理','/html/userManage.html',2,'d375a426-35f8-11eb-9473-002b67b20186',1);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('db4a3572-35f8-11eb-9473-002b67b20186','角色管理','/html/roleManage.html',2,'d375a426-35f8-11eb-9473-002b67b20186',2);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('bb0f1e45-35f9-11eb-9473-002b67b20186','菜单管理','/html/menuManage.html',2,'d375a426-35f8-11eb-9473-002b67b20186',3);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('c04c292a-35f9-11eb-9473-002b67b20186','友链管理','',2,'d375a426-35f8-11eb-9473-002b67b20186',4);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('cac414fc-35f9-11eb-9473-002b67b20186','友链显示','/html/friendView.html',3,'c04c292a-35f9-11eb-9473-002b67b20186',1);
+insert into sys_menu(id,name,link,level,pid,orders)
+values('c5b309aa-35f9-11eb-9473-002b67b20186','友链申请','/html/friendApply.html',3,'c04c292a-35f9-11eb-9473-002b67b20186',2);
+</sql>
+</version>

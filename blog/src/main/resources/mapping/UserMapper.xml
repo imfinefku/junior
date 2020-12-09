@@ -4,11 +4,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.junior.blog.dao.UserDao">
-	<select id="getUserByUsername"
-		parameterType="java.lang.String" resultType="com.junior.blog.domain.User">
+	<select id="getUserByUsername" parameterType="java.lang.String"
+		resultType="com.junior.blog.domain.User">
 		select *
 		from sys_user
 		where username=#{username}
+	</select>
+	<select id="getDataPage" parameterType="Map"
+		resultType="com.junior.blog.domain.User">
+		select u.id,u.name name,u.username,u.password,r.name rolename,r.id role_id
+		from sys_user u
+		left join sys_role r
+		on u.role_id=r.id
+		order by u.name
+		limit #{start},#{limit}
+	</select>
+	<select id="getDataPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from sys_user u
+		left join sys_role r
+		on u.role_id=r.id
+	</select>
+	<delete id="deleteUser" parameterType="java.lang.String">
+		delete from sys_user
+		where id =#{id}
+	</delete>
+	<select id="getRole" resultType="com.junior.blog.domain.Role">
+		select *
+		from sys_role
+		order by id
 	</select>
 </mapper> 
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.junior.blog.dao.MenuDao">
+	<select id="getMenuByUserId"
+		parameterType="java.lang.String" resultType="com.junior.blog.domain.Menu">
+		select m.*
+		from sys_role r,sys_role_menu rm,sys_menu m
+		where r.id=#{roleId}
+		and r.id=rm.role_id
+		and rm.menu_id=m.id
+		order by m.level,m.orders
+	</select>
+</mapper> 
+

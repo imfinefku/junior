@@ -2,6 +2,7 @@ package com.junior.blog.domain;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,11 @@ public class User implements UserDetails,Serializable {
 	/** 名称 */
 	private String name;
 	/** 角色 */
-	private int role;
+	private String role_id;
+	/** 权限菜单 */
+	private List<Menu> menuList;
+	/** 角色名 */
+	private String rolename;
 
 	public String getId() {
 		return id;
@@ -58,18 +63,34 @@ public class User implements UserDetails,Serializable {
 		this.name = name;
 	}
 
-	public int getRole() {
-		return role;
+	public String getRole_id() {
+		return role_id;
 	}
 
-	public void setRole(int role) {
-		this.role = role;
+	public void setRole_id(String role_id) {
+		this.role_id = role_id;
+	}
+
+	public List<Menu> getMenuList() {
+		return menuList;
+	}
+
+	public void setMenuList(List<Menu> menuList) {
+		this.menuList = menuList;
+	}
+
+	public String getRolename() {
+		return rolename;
+	}
+
+	public void setRolename(String rolename) {
+		this.rolename = rolename;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer str = new StringBuffer();
-		str.append(id).append(username).append(password).append(name).append(role);
+		str.append(id).append(username).append(password).append(name).append(role_id);
 		return str.toString();
 	}
 
