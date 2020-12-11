@@ -19,4 +19,8 @@ public interface UserDao {
 	public int deleteUser(@Param("id") String id);
 	
 	public List<Role> getRole();
+	
+	public int insertUser(User user);
+	
+	public int updateUser(User user);
 }

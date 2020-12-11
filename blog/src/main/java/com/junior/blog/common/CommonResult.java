@@ -1,5 +1,11 @@
 package com.junior.blog.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
 /**
  * 返回对象
  * 
@@ -74,7 +80,7 @@ public class CommonResult<T> {
 	public static <T> CommonResult<T> failed() {
 		return new CommonResult<T>(ResultCode.FAILED.getCode(), ResultCode.FAILED.getMessage(), null);
 	}
-	
+
 	/**
 	 * 失败
 	 * 
@@ -112,5 +118,19 @@ public class CommonResult<T> {
 	 */
 	public static <T> CommonResult<T> forbidden(T data) {
 		return new CommonResult<T>(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage(), data);
+	}
+
+	/**
+	 * 参数校验失败
+	 * @param bindingResult
+	 * @return
+	 */
+	public static CommonResult<List<String>> checkError(BindingResult bindingResult) {
+		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+		List<String> errorList = new ArrayList<String>();
+		for (FieldError fe : fieldErrors) {
+			errorList.add(fe.getDefaultMessage());
+		}
+		return new CommonResult<List<String>>(ResultCode.VALIDATE_FAILED.getCode(), "参数校验失败", errorList);
 	}
 }

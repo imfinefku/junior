@@ -17,7 +17,7 @@
 			</ul>
 			<ul class="layui-nav layui-layout-right">
 				<li class="layui-nav-item"><a href="javascript:;"> <img
-						src="/manager.jpg" class="layui-nav-img"> <span id="name"></span>
+						src="/manager.jpg" class="layui-nav-img"> <span id="nickname"></span>
 				</a>
 					<dl class="layui-nav-child">
 						<dd>
@@ -39,7 +39,6 @@
 		</div>
 
 		<div class="layui-body" id="content" style="background-color:#f2f2f2;"></div>
-
 		<div class="layui-footer">
 			<!-- 底部固定区域 -->
 			© layui.com - 底部固定区域
@@ -53,7 +52,7 @@
 		layui.use('element', function() {
 			element = layui.element;
 		});
-		$("#name").html($.cookie("name"));
+		$("#nickname").html($.cookie("name"));
 		setMenu();
 		setContent("/html/control.html");
 	};

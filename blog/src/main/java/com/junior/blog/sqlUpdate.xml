@@ -5,6 +5,7 @@ CREATE TABLE `b_blog` (
   `id` varchar(36) NOT NULL,
   `title` varchar(30) DEFAULT NULL,
   `content` text,
+  `author` varchar(36) DEFAULT NULL,
   `tag_id` varchar(36) DEFAULT NULL,
   `likenum` bigint(20) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
@@ -30,6 +31,7 @@ CREATE TABLE `b_message` (
 CREATE TABLE `b_tag` (
   `id` varchar(36) NOT NULL,
   `name` varchar(20) DEFAULT NULL,
+  `addtime` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 </sql>

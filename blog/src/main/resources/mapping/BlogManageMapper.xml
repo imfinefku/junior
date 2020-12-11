@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.junior.blog.dao.BlogManageDao">
+	<select id="getDataPage" parameterType="Map"
+		resultType="com.junior.blog.domain.Tag">
+		select *
+		from b_tag
+		order by addtime
+		limit #{start},#{limit}
+	</select>
+	<select id="getDataPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from b_tag
+	</select>
+	<insert id="insertTag"
+		parameterType="com.junior.blog.domain.Tag">
+		insert b_tag(id,name,addtime)
+		values(#{id},#{name},#{addtime})
+	</insert>
+	<update id="updateTag"
+		parameterType="com.junior.blog.domain.Tag">
+		update b_tag
+		set name=#{name}
+		where id=#{id}
+	</update>
+	<delete id="deleteTag" parameterType="String">
+		delete
+		from b_tag
+		where
+		id=#{id}
+	</delete>
+	<select id="getBlogPage" parameterType="Map"
+		resultType="com.junior.blog.domain.Blog">
+		select b.id,b.title,b.content,u.name author,t.id
+		tag_id,t.name tag_name,b.likenum,
+		b.status,b.addtime,b.updatetime
+		from
+		b_blog b,sys_user u,b_tag t
+		where b.author=u.id
+		and b.tag_id=t.id
+		order
+		by b.addtime desc
+		limit #{start},#{limit}
+	</select>
+	<select id="getBlogPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from b_blog
+	</select>
+	<update id="updateBlogStatus">
+		update b_blog
+		set status=#{status}
+		where id=#{id}
+	</update>
+	<delete id="deleteBlog">
+		delete from
+		b_blog
+		where id=#{id}
+	</delete>
+</mapper> 
+

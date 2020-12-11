@@ -35,5 +35,14 @@
 		from sys_role
 		order by id
 	</select>
+	<insert id="insertUser" parameterType="com.junior.blog.domain.User">
+		insert into sys_user(id,name,username,password,role_id)
+		values(#{id},#{name},#{username},#{password},#{role_id});
+	</insert>
+	<update id="updateUser" parameterType="com.junior.blog.domain.User">
+		update sys_user
+		set name=#{name},password=#{password},role_id=#{role_id}
+		where id=#{id}
+	</update>
 </mapper> 
 

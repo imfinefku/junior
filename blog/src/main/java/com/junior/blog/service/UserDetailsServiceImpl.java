@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = dao.getUserByUsername(username);
-		if (user != null && user.getRole_id()!=null) {// 获取权限菜单
+		if (user != null && user.getRole_id() != null) {// 获取权限菜单
 			List<Menu> menuList = menuDao.getMenuByUserId(user.getRole_id());
 			user.setMenuList(menuList);
 		}
@@ -40,20 +40,41 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public User getCurrentUser() {
 		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-	
-	public List<User> getDataPage(Map dataMap){
+
+	public List<User> getDataPage(Map dataMap) {
 		return dao.getDataPage(dataMap);
 	}
-	
+
 	public int getDataPageCount(Map dataMap) {
 		return dao.getDataPageCount(dataMap);
 	}
-	
+
 	public int deleteUser(String id) {
 		return dao.deleteUser(id);
 	}
-	
-	public List<Role> getRole(){
+
+	public List<Role> getRole() {
 		return dao.getRole();
+	}
+
+	/**
+	 * 检查账号是否存在
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public boolean checkUsername(String username) {
+		if (dao.getUserByUsername(username) != null) {
+			return false;
+		}
+		return true;
+	}
+	
+	public int insertUser(User user) {
+		return dao.insertUser(user);
+	}
+	
+	public int updateUser(User user) {
+		return dao.updateUser(user);
 	}
 }

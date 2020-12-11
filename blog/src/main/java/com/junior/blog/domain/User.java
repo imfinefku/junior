@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,16 +16,22 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author junior
  * 
  */
-public class User implements UserDetails,Serializable {
+public class User implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 86907990065964328L;
 
 	private String id;
 	/** 用户名 */
+	@NotEmpty(message = "账号不能为空")
+	@Length(max = 20, message = "账号不能超过20个字符")
 	private String username;
 	/** 密码 */
+	@NotEmpty(message = "密码不能为空")
+	@Length(max = 20, message = "密码不能超过20个字符")
 	private String password;
 	/** 名称 */
+	@NotEmpty(message = "用户名不能为空")
+	@Length(max = 10, message = "用户名不能超过10个字符")
 	private String name;
 	/** 角色 */
 	private String role_id;

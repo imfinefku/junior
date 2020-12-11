@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -20,6 +21,8 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -126,10 +129,45 @@ public class UserController
 		return CommonResult.success(rtnMap);
 	}
 
-	@PostMapping("/addUser")
-	public CommonResult addUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User user) {
+	/**
+	 * 添加用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @param bindingResult
+	 * @return
+	 */
+	@PostMapping("/insertUser")
+	public CommonResult insertUser(HttpServletRequest request, HttpServletResponse response,
+			@Validated @RequestBody User user, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return CommonResult.checkError(bindingResult);
+		}
+		if (service.checkUsername(user.getUsername())) {
+			user.setId(UUID.randomUUID().toString());
+			service.insertUser(user);
+			return CommonResult.success();
+		}
+		return CommonResult.failed();
+	}
 
-		return null;
+	/**
+	 * 修改用户信息
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @param bindingResult
+	 * @return
+	 */
+	@PostMapping("/updateUser")
+	public CommonResult updateUser(HttpServletRequest request, HttpServletResponse response,
+			@Validated @RequestBody User user, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return CommonResult.checkError(bindingResult);
+		}
+		service.updateUser(user);
+		return CommonResult.success();
 	}
 
 	/**
@@ -151,6 +189,7 @@ public class UserController
 
 	/**
 	 * 获取所有的角色信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
