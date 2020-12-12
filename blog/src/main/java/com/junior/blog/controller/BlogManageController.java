@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,7 @@ import com.junior.blog.common.CommonResult;
 import com.junior.blog.domain.Blog;
 import com.junior.blog.domain.Tag;
 import com.junior.blog.service.BlogManageService;
+import com.junior.blog.service.UserDetailsServiceImpl;
 
 /**
  * 博客管理controller
@@ -39,11 +42,16 @@ public class BlogManageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BlogManageController.class);
 
+	public static final String IMG_PREFIX = "/showImage/";
+
 	@Value("${com.junior.blog.imageSavePath:}")
 	private String imageSavePath;
 
 	@Autowired
 	private BlogManageService service;
+
+	@Autowired
+	private UserDetailsServiceImpl userDetailsServiceImpl;
 
 	/**
 	 * 分页获取标签数据
@@ -220,7 +228,7 @@ public class BlogManageController {
 		String oriname = file.getOriginalFilename();
 		String suffixName = oriname.substring(oriname.lastIndexOf("."));
 		String fileName = UUID.randomUUID().toString() + suffixName;
-		String filePath = imageSavePath+"\\" + fileName;
+		String filePath = imageSavePath + "\\" + fileName;
 		File dest = new File(filePath);
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdirs();
@@ -233,10 +241,58 @@ public class BlogManageController {
 		Map rtnMap = new HashMap();
 		Map dataMap = new HashMap();
 		dataMap.put("title", fileName);
-		dataMap.put("src", "/showImage/"+fileName);
+		dataMap.put("src", IMG_PREFIX + fileName);
 		rtnMap.put("msg", "上传成功");
 		rtnMap.put("code", 0);
 		rtnMap.put("data", dataMap);
 		return rtnMap;
+	}
+
+	/**
+	 * 插入博客
+	 * 
+	 * @param request
+	 * @param blog
+	 * @param bindingResult
+	 * @return
+	 */
+	@PostMapping("/insertBlog")
+	public CommonResult insertBlog(HttpServletRequest request, @Validated @RequestBody Blog blog,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return CommonResult.checkError(bindingResult);
+		}
+		blog.setId(UUID.randomUUID().toString());
+		blog.setAuthor(userDetailsServiceImpl.getCurrentUser().getId());
+		Date curDate = new Date();
+		blog.setAddtime(curDate.getTime());
+		blog.setUpdatetime(curDate.getTime());
+		int result = service.insertBlog(blog);
+		if (result > 0) {
+			CommonResult.failed();
+		}
+		return CommonResult.success(blog.getId());
+	}
+	
+	/**
+	 * 修改博客
+	 * @param request
+	 * @param blog
+	 * @param bindingResult
+	 * @return
+	 */
+	@PostMapping("/updateBlog")
+	public CommonResult updateBlog(HttpServletRequest request, @Validated @RequestBody Blog blog,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return CommonResult.checkError(bindingResult);
+		}
+		Date curDate = new Date();
+		blog.setUpdatetime(curDate.getTime());
+		int result = service.updateBlog(blog);
+		if (result > 0) {
+			CommonResult.failed();
+		}
+		return CommonResult.success();
 	}
 }

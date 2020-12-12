@@ -57,4 +57,12 @@ public class BlogManageService {
 	public int deleteBlog(String id) {
 		return dao.deleteBlog(id);
 	}
+
+	public int insertBlog(Blog blog) {
+		return dao.insertBlog(blog);
+	}
+
+	public int updateBlog(Blog blog) {
+		return dao.updateBlog(blog);
+	}
 }

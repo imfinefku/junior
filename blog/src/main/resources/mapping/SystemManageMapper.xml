@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.junior.blog.dao.SystemManageDao">
+	<select id="getSubscribePage" parameterType="Map"
+		resultType="com.junior.blog.domain.Subscribe">
+		select *
+		from sys_subscribe
+		order by addtime
+		limit #{start},#{limit}
+	</select>
+	<select id="getSubscribePageCount" parameterType="Map" resultType="Integer">
+		select count(*)
+		from sys_subscribe
+	</select>
+	<delete id="deleteSubscribe" parameterType="String">
+		delete from sys_subscribe
+		where id=#{id}
+	</delete>
+	<insert id="insertSubscribe" parameterType="com.junior.blog.domain.Subscribe">
+		insert into sys_subscribe(id,name,email,addtime)
+		values(#{id},#{name},#{email},#{addtime})
+	</insert>
+	<update id="updateSubscribe" parameterType="com.junior.blog.domain.Subscribe">
+		update sys_subscribe
+		set name=#{name},email=#{email}
+		where id=#{id}
+	</update>
+</mapper> 
+

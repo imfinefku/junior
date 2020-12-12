@@ -2,6 +2,10 @@ package com.junior.blog.domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 /**
  * 博客实体类，对应数据库表b_blog
  * 
@@ -21,12 +25,18 @@ public class Blog implements Serializable {
 	/** id */
 	private String id;
 	/** 标题 */
+	@NotEmpty(message = "标题不能为空")
+	@Length(max = 30, message = "标题不能超过30个字符")
 	private String title;
 	/** 内容 */
+	@NotEmpty(message = "博客内容不能为空")
 	private String content;
+	/** 配图 */
+	private String picture;
 	/** 作者id */
 	private String author;
 	/** 标签id */
+	@NotEmpty(message = "标签不能为空")
 	private String tag_id;
 	/** 标签名称 */
 	private String tag_name;
@@ -61,6 +71,14 @@ public class Blog implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 	public String getAuthor() {

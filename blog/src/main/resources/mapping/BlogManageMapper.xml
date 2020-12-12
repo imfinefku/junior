@@ -61,5 +61,16 @@
 		b_blog
 		where id=#{id}
 	</delete>
+	<insert id="insertBlog"
+		parameterType="com.junior.blog.domain.Blog">
+		insert into b_blog(id,title,picture,content,author,tag_id,likenum,status,addtime,updatetime)
+		values(#{id},#{title},#{picture},#{content},#{author},#{tag_id},#{likenum},#{status},#{addtime},#{updatetime})
+	</insert>
+	<update id="updateBlog"
+		parameterType="com.junior.blog.domain.Blog">
+		update b_blog
+		set title=#{title},picture=#{picture},content=#{content},tag_id=#{tag_id},updatetime=#{updatetime}
+		where id=#{id}
+	</update>
 </mapper> 
 

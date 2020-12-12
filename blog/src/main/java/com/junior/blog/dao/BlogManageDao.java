@@ -27,4 +27,8 @@ public interface BlogManageDao {
 	public int updateBlogStatus(@Param("id") String id, @Param("status") int status);
 
 	public int deleteBlog(@Param("id") String id);
+
+	public int insertBlog(Blog blog);
+
+	public int updateBlog(Blog blog);
 }
