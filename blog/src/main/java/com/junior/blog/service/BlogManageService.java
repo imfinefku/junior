@@ -65,4 +65,8 @@ public class BlogManageService {
 	public int updateBlog(Blog blog) {
 		return dao.updateBlog(blog);
 	}
+
+	public List<Tag> getAllTag() {
+		return dao.getAllTag();
+	}
 }

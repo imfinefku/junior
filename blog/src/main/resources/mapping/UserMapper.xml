@@ -12,10 +12,12 @@
 	</select>
 	<select id="getDataPage" parameterType="Map"
 		resultType="com.junior.blog.domain.User">
-		select u.id,u.name name,u.username,u.password,r.name rolename,r.id role_id
+		select u.id,u.name name,u.username,u.password,r.name
+		rolename,r.id role_id
 		from sys_user u
 		left join sys_role r
-		on u.role_id=r.id
+		on
+		u.role_id=r.id
 		order by u.name
 		limit #{start},#{limit}
 	</select>
@@ -24,25 +26,92 @@
 		select count(*)
 		from sys_user u
 		left join sys_role r
-		on u.role_id=r.id
+		on
+		u.role_id=r.id
 	</select>
 	<delete id="deleteUser" parameterType="java.lang.String">
 		delete from sys_user
-		where id =#{id}
+		where
+		id =#{id}
 	</delete>
 	<select id="getRole" resultType="com.junior.blog.domain.Role">
 		select *
 		from sys_role
 		order by id
 	</select>
-	<insert id="insertUser" parameterType="com.junior.blog.domain.User">
+	<insert id="insertUser"
+		parameterType="com.junior.blog.domain.User">
 		insert into sys_user(id,name,username,password,role_id)
 		values(#{id},#{name},#{username},#{password},#{role_id});
 	</insert>
-	<update id="updateUser" parameterType="com.junior.blog.domain.User">
+	<update id="updateUser"
+		parameterType="com.junior.blog.domain.User">
 		update sys_user
-		set name=#{name},password=#{password},role_id=#{role_id}
+		set
+		name=#{name},password=#{password},role_id=#{role_id}
 		where id=#{id}
 	</update>
-</mapper> 
-
+	<update id="updatePassword">
+		update sys_user
+		set password=#{newPassword}
+		where
+		id=#{id}
+	</update>
+	<select id="getRolePage" parameterType="Map"
+		resultType="com.junior.blog.domain.Role">
+		select *
+		from sys_role
+		order by id
+		limit #{start},#{limit}
+	</select>
+	<select id="getRolePageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from sys_role
+	</select>
+	<insert id="insertRole"
+		parameterType="com.junior.blog.domain.Role">
+		insert into sys_role(id,name)
+		values(#{id},#{name})
+	</insert>
+	<update id="updateRole"
+		parameterType="com.junior.blog.domain.Role">
+		update sys_role
+		set name=#{name}
+		where id=#{id}
+	</update>
+	<delete id="deleteRole">
+		delete from sys_role
+		where id=#{id}
+	</delete>
+	<delete id="deleteRoleMenu">
+		delete from sys_role_menu
+		where role_id=#{id}
+	</delete>
+	<select id="getMenuNumByRoleId" resultType="Integer">
+		select count(*)
+		from
+		sys_role_menu
+		where role_id=#{id}
+	</select>
+	<select id="getMenuListByRoleId"
+		resultType="com.junior.blog.domain.Menu">
+		select m.*
+		from sys_role_menu rm,sys_menu m
+		where rm.role_id=#{id}
+		and rm.menu_id=m.id
+		order by m.level,m.orders
+	</select>
+	<select id="getAllMenuList" resultType="com.junior.blog.domain.Menu">
+		select *
+		from sys_menu
+		order by level,orders
+	</select>
+	<insert id="insertRoleMenuList" parameterType="java.util.List">
+		insert into sys_role_menu(id,role_id,menu_id)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},#{item.role_id},#{item.menu_id})
+		</foreach>
+	</insert>
+</mapper>

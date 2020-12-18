@@ -9,23 +9,92 @@
 		select *
 		from sys_subscribe
 		order by addtime
-		limit #{start},#{limit}
+		limit
+		#{start},#{limit}
 	</select>
-	<select id="getSubscribePageCount" parameterType="Map" resultType="Integer">
+	<select id="getSubscribePageCount" parameterType="Map"
+		resultType="Integer">
 		select count(*)
 		from sys_subscribe
 	</select>
 	<delete id="deleteSubscribe" parameterType="String">
-		delete from sys_subscribe
+		delete from
+		sys_subscribe
 		where id=#{id}
 	</delete>
-	<insert id="insertSubscribe" parameterType="com.junior.blog.domain.Subscribe">
+	<insert id="insertSubscribe"
+		parameterType="com.junior.blog.domain.Subscribe">
 		insert into sys_subscribe(id,name,email,addtime)
 		values(#{id},#{name},#{email},#{addtime})
 	</insert>
-	<update id="updateSubscribe" parameterType="com.junior.blog.domain.Subscribe">
+	<update id="updateSubscribe"
+		parameterType="com.junior.blog.domain.Subscribe">
 		update sys_subscribe
 		set name=#{name},email=#{email}
+		where id=#{id}
+	</update>
+	<select id="getFriendApplyPage" parameterType="Map"
+		resultType="com.junior.blog.domain.FriendApply">
+		select *
+		from sys_friend_apply
+		order by applytime,status
+		limit #{start},#{limit}
+	</select>
+	<select id="getFriendApplyPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from sys_friend_apply
+	</select>
+	<update id="updateFriendApplyStatus">
+		update sys_friend_apply
+		set status=#{status}
+		where
+		id=#{id}
+	</update>
+	<select id="findFriendApplyById" parameterType="String"
+		resultType="com.junior.blog.domain.FriendApply">
+		select *
+		from
+		sys_friend_apply
+		where id=#{id}
+	</select>
+	<select id="findFriendMaxOrders" resultType="Integer">
+		select
+		ifnull(max(orders),0) +1
+		from sys_friend
+	</select>
+	<insert id="insertFriend"
+		parameterType="com.junior.blog.domain.Friend">
+		insert into
+		sys_friend(id,name,url,orders,addtime,status)
+		values(#{id},#{name},#{url},#{orders},#{addtime},#{status})
+	</insert>
+	<select id="getFriendPage" parameterType="Map"
+		resultType="com.junior.blog.domain.Friend">
+		select *
+		from sys_friend
+		order by orders
+		limit
+		#{start},#{limit}
+	</select>
+	<select id="getFriendPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from sys_friend
+	</select>
+	<update id="updateFriendStatus">
+		update sys_friend
+		set status=#{status}
+		where id=#{id}
+	</update>
+	<delete id="deleteFriend">
+		delete
+		from sys_friend
+		where id=#{id}
+	</delete>
+	<update id="updateFriend" parameterType="com.junior.blog.domain.Friend">
+		update sys_friend
+		set name=#{name},url=#{url},orders=#{orders}
 		where id=#{id}
 	</update>
 </mapper> 

@@ -135,19 +135,17 @@ function initTable() {
 		case 'insert':
 			curType = "insert";
 			curOpen = layer.open({
-				type : 1,
+				type : 2,
 				title : "写博客",
-				offset : "auto", // http://www.layui.com/doc/modules/layer.html#offset
-				id : 'message', // 防止多次弹出
-				content : $("#formbar"),
-				area : [ '400px', '200px' ],
-				shade : 0.3,
-				success : function(layero) {
-					// 把内容放到遮罩层里，防止遮罩挡住弹出层
-					var mask = $(".layui-layer-shade");
-					mask.appendTo(layero.parent());
-					$("#name").val("");
-					form.render();
+				shadeClose : true,
+				shade : false,
+				area : [ '100%', '100%' ],
+				content : "/html/writeBlog.html",
+				success : function(layero, index) {
+					// 获取子页面的iframe
+					var iframe = window['layui-layer-iframe' + index];
+					// 向子页面的全局函数child传参
+					iframe.changeType("insert");
 				}
 			});
 			break;
@@ -162,18 +160,18 @@ function initTable() {
 		if (layEvent === 'update') { // 修改
 			curType = "update";
 			curOpen = layer.open({
-				type : 1,
+				type : 2,
 				title : "修改博客",
-				offset : "auto", // http://www.layui.com/doc/modules/layer.html#offset
-				id : 'message', // 防止弹出多个
-				content : $("#formbar"),
-				area : [ '400px', '200px' ],
-				shade : 0.3,
-				success : function(layero) {
-					// 把内容放到遮罩层里，防止遮罩挡住弹出层
-					var mask = $(".layui-layer-shade");
-					mask.appendTo(layero.parent());
-					form.render();
+				shadeClose : true,
+				shade : false,
+				area : [ '100%', '100%' ],
+				content : "/html/writeBlog.html",
+				success : function(layero, index) {
+					// 获取子页面的iframe
+					var iframe = window['layui-layer-iframe' + index];
+					// 向子页面的全局函数child传参
+					iframe.changeType("update");
+					iframe.addTextData(data);
 				}
 			});
 			// 当前编辑ID
@@ -356,7 +354,6 @@ function publishBlog(id) {
 		error : function(error) {
 		}
 	});
-
 }
 
 function unpublishBlog(id) {
@@ -382,4 +379,16 @@ function unpublishBlog(id) {
 		error : function(error) {
 		}
 	});
+}
+
+//子页面写文章成功后调用该方法
+function caozuoSuccess(data) {
+    layer.closeAll();
+    if (data == "insert") {
+        tableReload();
+        layer.msg('添加成功', {icon: 1});
+    } else if (data == "update") {
+        tableReload();
+        layer.msg('修改成功', {icon: 1});
+    }
 }

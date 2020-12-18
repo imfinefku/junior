@@ -1,7 +1,10 @@
 package com.junior.blog.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Service;
 import com.junior.blog.dao.MenuDao;
 import com.junior.blog.dao.UserDao;
 import com.junior.blog.domain.Menu;
+import com.junior.blog.domain.MenuTree;
 import com.junior.blog.domain.Role;
+import com.junior.blog.domain.RoleMenu;
 import com.junior.blog.domain.User;
 
 @Service
@@ -69,12 +74,116 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		return true;
 	}
-	
+
 	public int insertUser(User user) {
 		return dao.insertUser(user);
 	}
-	
+
 	public int updateUser(User user) {
 		return dao.updateUser(user);
+	}
+
+	public int updatePassword(String id, String newPassword) {
+		return dao.updatePassword(id, newPassword);
+	}
+
+	public List<Role> getRolePage(Map map) {
+		return dao.getRolePage(map);
+	}
+
+	public int getRolePageCount(Map map) {
+		return dao.getRolePageCount(map);
+	}
+
+	public int insertRole(Role role) {
+		return dao.insertRole(role);
+	}
+
+	public int updateRole(Role role) {
+		return dao.updateRole(role);
+	}
+
+	public int deleteRoleMenu(String id) {
+		return dao.deleteRoleMenu(id);
+	}
+
+	public int deleteRole(String id) {
+		return dao.deleteRole(id);
+	}
+
+	public int getMenuNumByRoleId(String id) {
+		return dao.getMenuNumByRoleId(id);
+	}
+
+	public List<Menu> getAllMenuList() {
+		return dao.getAllMenuList();
+	}
+
+	public List<Menu> getMenuListByRoleId(String id) {
+		return dao.getMenuListByRoleId(id);
+	}
+
+	public List<MenuTree> getMenuTreeByList(List<Menu> menuList, boolean spread) {
+		List<MenuTree> menuTreeList = new ArrayList<MenuTree>();
+		for (Menu menu : menuList) {
+			MenuTree menuTree = new MenuTree();
+			menuTree.setId(menu.getId());
+			menuTree.setTitle(menu.getName());
+			menuTree.setPid(menu.getPid());
+			menuTree.setChecked(menu.getChecked());
+			if (spread) {
+				menuTree.setSpread(spread);
+			}
+			if (menu.getLevel() == 1) {
+				menuTreeList.add(menuTree);
+				continue;
+			}
+			setMenuTreeChildren(menuTreeList, menuTree);
+		}
+		return menuTreeList;
+	}
+
+	public void setMenuTreeChildren(List<MenuTree> menuTreeList, MenuTree menu) {
+		for (MenuTree menuTree : menuTreeList) {
+			if (menu.getPid().equals(menuTree.getId())) {
+				if (menuTree.getChildren() == null) {
+					menuTree.setChildren(new ArrayList<MenuTree>());
+				}
+				menuTree.getChildren().add(menu);
+				return;
+			}
+			if (menuTree.getChildren() != null && menuTree.getChildren().size() > 0) {
+				setMenuTreeChildren(menuTree.getChildren(), menu);
+			}
+		}
+	}
+
+	public void setMenuChecked(List<Menu> menuList, List<Menu> roleMenuList) {
+		Map<String, Menu> roleMenuMap = new HashMap<String, Menu>();
+		for (Menu menu : roleMenuList) {
+			roleMenuMap.put(menu.getId(), menu);
+		}
+		for (Menu menu : menuList) {
+			if (roleMenuMap.get(menu.getId()) != null) {
+				menu.setChecked(true);
+			}
+		}
+	}
+
+	public void getRoleMenuList(List<MenuTree> menuTreeList, List<RoleMenu> roleMenuList, String id) {
+		for (MenuTree menuTree : menuTreeList) {
+			RoleMenu rm = new RoleMenu();
+			rm.setId(UUID.randomUUID().toString());
+			rm.setRole_id(id);
+			rm.setMenu_id(menuTree.getId());
+			roleMenuList.add(rm);
+			if (menuTree.getChildren() != null && menuTree.getChildren().size() > 0) {
+				getRoleMenuList(menuTree.getChildren(), roleMenuList, id);
+			}
+		}
+	}
+
+	public int insertRoleMenuList(List<RoleMenu> roleMenuList) {
+		return dao.insertRoleMenuList(roleMenuList);
 	}
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="/js/jquery-1.10.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/writeBlog.js"></script>
+<link rel="stylesheet" href="/layui/css/layui.css">
+<title>写博客</title>
+</head>
+<body>
+	<form class="layui-form" lay-filter="myForm">
+		<div class="layui-form-item"></div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">标题：</label>
+			<div class="layui-inline" style="width: 400px;">
+				<input id="title" type="text" name="title" lay-verify="title"
+					autocomplete="off" placeholder="请输入标题" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="margin-bottom: 60px;">
+			<label class="layui-form-label">标签：</label>
+			<div class="layui-inline" style="width: 400px;">
+				<select id="tag" name="tag" lay-filter="tag" lay-search>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div style="float: left;">
+				配图：<img class="layui-inline" id="imageXs" width="50px" height="50px"
+					src="/uploadBackground.png"
+					style="border: 1px solid #8D8D8D; cursor: pointer;" />
+			</div>
+			<div class="layui-inline" style="width: 400px; float: left;">
+				<button class="layui-btn layui-btn-sm" lay-submit=""
+					lay-filter="submitBlog">提交</button>
+				<button class="layui-btn layui-btn-sm" onclick="closeParentFrame()">取消</button>
+				<label id="autoSave" style="margin-left: 50px; color: green;"></label>
+			</div>
+		</div>
+		<textarea class="layui-textarea layui-hide policy_content"
+			name="policy_content" lay-verify="policy_content" id="policy_content">
+            </textarea>
+	</form>
+</body>
+</html>

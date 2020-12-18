@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <script src="/js/jquery-1.10.1.min.js"></script>
-<script src="/js/jquery.cookie.js"></script>
 <title>login</title>
 </head>
 <body>
@@ -23,7 +22,6 @@ function login(){
 		},
 		success : function(response) {
 			if (response.code == "200") {
-				$.cookie("menu",JSON.stringify(response.data));
 				window.location = "html/index.html";
 			} else {
 				alert(response.message);

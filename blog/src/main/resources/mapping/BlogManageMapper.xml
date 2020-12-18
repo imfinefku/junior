@@ -37,7 +37,7 @@
 		resultType="com.junior.blog.domain.Blog">
 		select b.id,b.title,b.content,u.name author,t.id
 		tag_id,t.name tag_name,b.likenum,
-		b.status,b.addtime,b.updatetime
+		b.status,b.addtime,b.updatetime,b.picture
 		from
 		b_blog b,sys_user u,b_tag t
 		where b.author=u.id
@@ -72,5 +72,9 @@
 		set title=#{title},picture=#{picture},content=#{content},tag_id=#{tag_id},updatetime=#{updatetime}
 		where id=#{id}
 	</update>
+	<select id="getAllTag" resultType="com.junior.blog.domain.Tag">
+		select *
+		from b_tag
+	</select>
 </mapper> 
 

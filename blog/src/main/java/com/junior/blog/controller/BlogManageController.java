@@ -273,9 +273,10 @@ public class BlogManageController {
 		}
 		return CommonResult.success(blog.getId());
 	}
-	
+
 	/**
 	 * 修改博客
+	 * 
 	 * @param request
 	 * @param blog
 	 * @param bindingResult
@@ -294,5 +295,16 @@ public class BlogManageController {
 			CommonResult.failed();
 		}
 		return CommonResult.success();
+	}
+	
+	/**
+	 * 获取所有的标签
+	 * @param request
+	 * @return
+	 */
+	@GetMapping("/getAllTag")
+	public CommonResult getAllTag(HttpServletRequest request) {
+		List<Tag> rtnList = service.getAllTag();
+		return CommonResult.success(rtnList);
 	}
 }

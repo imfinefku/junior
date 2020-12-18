@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <script src="/js/jquery-1.10.1.min.js"></script>
-<script src="/js/jquery.cookie.js"></script>
 <script src="/layui/layui.js"></script>
+<script src="/js/index.js"></script>
 <link rel="stylesheet" href="/layui/css/layui.css">
 <title>狂人日记</title>
 </head>
@@ -17,11 +17,12 @@
 			</ul>
 			<ul class="layui-nav layui-layout-right">
 				<li class="layui-nav-item"><a href="javascript:;"> <img
-						src="/manager.jpg" class="layui-nav-img"> <span id="nickname"></span>
+						src="/manager.jpg" class="layui-nav-img"> <span
+						id="nickname"></span>
 				</a>
 					<dl class="layui-nav-child">
 						<dd>
-							<a href="">修改密码</a>
+							<a href="javascript:updatePassword()">修改密码</a>
 						</dd>
 						<dd>
 							<a href="javascript:logout()">退出</a>
@@ -38,99 +39,45 @@
 			</div>
 		</div>
 
-		<div class="layui-body" id="content" style="background-color:#f2f2f2;"></div>
+		<div class="layui-body" id="content"
+			style="background-color: #f2f2f2;"></div>
 		<div class="layui-footer">
 			<!-- 底部固定区域 -->
-			© layui.com - 底部固定区域
+		</div>
+	</div>
+	<div class="layui-row" id="updatePs" style="display: none;">
+		<div class="layui-col-md10">
+			<form class="layui-form">
+				<div class="layui-form-item"></div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">旧密码：</label>
+					<div class="layui-input-block" style="margin-left:115px;">
+						<input id="oldPassword" type="text" name="oldPassword" lay-verify="oldPassword"
+							autocomplete="off" placeholder="请输入旧密码" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">新密码：</label>
+					<div class="layui-input-block" style="margin-left:115px;">
+						<input id="newPassword" type="password" name="newPassword" lay-verify="newPassword"
+							autocomplete="off" placeholder="请输入新密码" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label" style="width:85px;">确认新密码：</label>
+					<div class="layui-input-block" style="margin-left:115px;">
+						<input id="repeatNew" type="password" name="repeatNew" lay-verify="repeatNew"
+							autocomplete="off" placeholder="请再次输入新密码" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item" style="float: right;">
+					<button class="layui-btn layui-btn-sm" lay-submit=""
+						lay-filter="submitUpdatePs">提交</button>
+					<button id="reset" class="layui-btn layui-btn-sm layui-btn-primary"
+						type="reset">重置</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </body>
-<script>
-	var menuList = null;
-	var element = null;
-	window.onload = function() {
-		layui.use('element', function() {
-			element = layui.element;
-		});
-		$("#nickname").html($.cookie("name"));
-		setMenu();
-		setContent("/html/control.html");
-	};
-
-	function setMenu() {
-		menuList = JSON.parse($.cookie("menu"));
-		var topMenu = "";
-		for (var i = 0; i < menuList.length; i++) {
-			var data = menuList[i];
-			if (data.level == 1) {
-				topMenu += "<li class='layui-nav-item'><a href=\"javascript:setChildMenu('"
-						+ data.link
-						+ "','"
-						+ data.id
-						+ "')\">"
-						+ data.name
-						+ "</a></li>";
-			}
-		}
-		$("#topMenu").html(topMenu);
-	}
-
-	function setChildMenu(url, id) {
-		if (url != "") {
-			setContent(url);
-		}
-		var childMenu = "";
-		for (var i = 0; i < menuList.length; i++) {
-			var firstChild = true;
-			if (menuList[i].pid == id) {
-				childMenu += "<li class='layui-nav-item'><a href=\"javascript:setContent('"
-						+ menuList[i].link
-						+ "')\">"
-						+ menuList[i].name
-						+ "</a>";
-				for (var j = 0; j < menuList.length; j++) {
-					if (menuList[j].pid == menuList[i].id) {
-						if (firstChild) {
-							childMenu += "<dl class=\"layui-nav-child\">";
-							firstChild = false;
-						}
-						childMenu += "<dd><a href=\"javascript:setContent('"
-								+ menuList[j].link + "')\">" + menuList[j].name
-								+ "</a></dd>";
-					}
-				}
-				if (!firstChild) {
-					childMenu += "</dl>";
-				}
-				childMenu += "</li>";
-			}
-		}
-		$("#leftTree").html(childMenu);
-		//重新渲染
-		element.init();
-	}
-
-	function setContent(url) {
-		if (url != "") {
-			$("#content").load(url);
-		}
-	}
-
-	function logout() {
-		$.ajax({
-			url : "/logout",
-			dataType : "json",
-			data : {},
-			success : function(response) {
-				if (response.code == "200") {
-					window.location = "login.html";
-				} else {
-					alert(response.message);
-				}
-			},
-			error : function(error) {
-			}
-		});
-	}
-</script>
 </html>

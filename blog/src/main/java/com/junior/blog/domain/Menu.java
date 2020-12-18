@@ -4,16 +4,17 @@ import java.io.Serializable;
 
 /**
  * 菜单实体类，对应数据库表sys_menu
+ * 
  * @author xuduo
  *
  */
-public class Menu implements Serializable{
+public class Menu implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2100217423573516059L;
-	
+
 	/** id */
 	private String id;
 	/** 菜单名称 */
@@ -26,6 +27,10 @@ public class Menu implements Serializable{
 	private String pid;
 	/** 菜单顺序 */
 	private int orders;
+	/** 默认显示 */
+	private int defaultview;
+
+	private boolean checked = false;
 
 	public String getId() {
 		return id;
@@ -73,5 +78,21 @@ public class Menu implements Serializable{
 
 	public void setOrders(int orders) {
 		this.orders = orders;
+	}
+
+	public boolean getChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
+	public int getDefaultview() {
+		return defaultview;
+	}
+
+	public void setDefaultview(int defaultview) {
+		this.defaultview = defaultview;
 	}
 }

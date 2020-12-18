@@ -42,5 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll().anyRequest() // 任何请求,登录后可以访问
 				.authenticated().and().csrf().disable();
 		http.logout().logoutSuccessHandler(user);//注销
+		http.headers().frameOptions().sameOrigin();//允许同域名下的http页面嵌套再iframe中
 	}
 }

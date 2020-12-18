@@ -3,6 +3,8 @@ var curType;// 当前type,insert or update
 var curID;// 当前编辑ID
 var curOpen;// 当前打开的弹出层
 var form;// 表单
+var tree;
+var layer;
 
 $(function() {
 	initLayui();
@@ -10,12 +12,46 @@ $(function() {
 
 // 初始化layui
 function initLayui() {
-	layui.use([ 'layer', 'table', 'form' ], function() {
+	layui.use([ 'tree', 'layer', 'table', 'form' ], function() {
 		table = layui.table;
+		tree = layui.tree
 		form = layui.form;
+		layer = layui.layer
 		initTable();
 		initForm();
-		getRole();
+		initTree();
+	});
+}
+
+function initTree() {
+	// 渲染
+	tree.render({
+		elem : '#tree' // 绑定元素
+		,
+		id : 'tree',
+		showCheckbox : true // 是否显示复选框
+		,
+		data : []
+	});
+}
+
+function reloadTree(id) {
+	$.ajax({
+		url : "/user/getRoleMenuTree",
+		dataType : "json",
+		data : {
+			"id" : id,
+			"spread" : true
+		},
+		success : function(response) {
+			if (response.code == "200") {
+				tree.reload('tree', {
+					data : response.data
+				});
+			}
+		},
+		error : function(error) {
+		}
 	});
 }
 
@@ -23,7 +59,7 @@ function initLayui() {
 function initTable() {
 	table.render({
 		elem : '#grid',
-		url : '/user/getDataPage',
+		url : '/user/getRolePage',
 		toolbar : '#toolbar',
 		id : "grid",
 		parseData : function(res) { // res 即为原始返回的数据
@@ -35,24 +71,17 @@ function initTable() {
 		},
 		height : "full",
 		cols : [ [ {
+			field : 'id',
+			width : '0',
+			title : 'id',
+			hide : true
+		}, {
 			field : 'name',
-			width : 0,
-			title : '用户名'
-		}, {
-			field : 'username',
-			width : 0,
-			title : '账号'
-		}, {
-			field : 'password',
-			width : 0,
-			title : '密码'
-		}, {
-			field : 'rolename',
-			width : 0,
-			title : '角色'
+			width : '60%',
+			title : '角色名称'
 		}, {
 			field : 'cz',
-			width : 0,
+			width : '40%',
 			toolbar : '#tool',
 			title : '操作'
 		} ] ],
@@ -69,22 +98,17 @@ function initTable() {
 			curType = "insert";
 			curOpen = layer.open({
 				type : 1,
-				title : "添加用户",
+				title : "添加角色",
 				offset : "auto", // http://www.layui.com/doc/modules/layer.html#offset
 				id : 'message', // 防止多次弹出
 				content : $("#formbar"),
-				area : [ '400px', '460px' ],
+				area : [ '400px', '200px' ],
 				shade : 0.3,
 				success : function(layero) {
-			        //把内容放到遮罩层里，防止遮罩挡住弹出层
-			        var mask = $(".layui-layer-shade");
-			        mask.appendTo(layero.parent());
+					// 把内容放到遮罩层里，防止遮罩挡住弹出层
+					var mask = $(".layui-layer-shade");
+					mask.appendTo(layero.parent());
 					$("#name").val("");
-					$("#username").val("");
-					$("#password").val("");
-					$("#role").val("");
-					$("#reset").css("display","");
-					$("#username").removeAttr("disabled");
 					form.render();
 				}
 			});
@@ -101,18 +125,16 @@ function initTable() {
 			curType = "update";
 			curOpen = layer.open({
 				type : 1,
-				title : "修改用户",
+				title : "修改角色",
 				offset : "auto", // http://www.layui.com/doc/modules/layer.html#offset
 				id : 'message', // 防止弹出多个
 				content : $("#formbar"),
-				area : [ '400px', '460px' ],
+				area : [ '400px', '200px' ],
 				shade : 0.3,
 				success : function(layero) {
-			        //把内容放到遮罩层里，防止遮罩挡住弹出层
-			        var mask = $(".layui-layer-shade");
-			        mask.appendTo(layero.parent());
-					$("#reset").css("display","none");
-					$("#username").attr("disabled","disabled");
+					// 把内容放到遮罩层里，防止遮罩挡住弹出层
+					var mask = $(".layui-layer-shade");
+					mask.appendTo(layero.parent());
 					form.render();
 				}
 			});
@@ -120,19 +142,35 @@ function initTable() {
 			curID = data.id;
 			// 为表单赋值
 			form.val('message', {
-				"name" : data.name,
-				"username" : data.username,
-				"password" : data.password,
-				"role":data.role_id
+				"name" : data.name
 			});
 		} else if (layEvent === 'delete') { // 删除
 			// 询问框
-			layer.confirm('确认删除该用户？', {
+			layer.confirm('确认删除该角色？', {
 				btn : [ '确认', '取消' ]
 			// 按钮
 			}, function() {
-				deleteUser(data.id);
+				deleteRole(data.id);
 			}, function() {
+			});
+		} else if (layEvent === 'authorize') {
+			// 当前编辑ID
+			curID = data.id;
+			curOpen = layer.open({
+				type : 1,
+				title : "授权",
+				offset : "auto", // http://www.layui.com/doc/modules/layer.html#offset
+				id : 'authorize', // 防止弹出多个
+				content : $("#authorizeBar"),
+				area : [ '450px', '475px' ],
+				shade : 0.3,
+				success : function(layero) {
+					// 把内容放到遮罩层里，防止遮罩挡住弹出层
+					var mask = $(".layui-layer-shade");
+					mask.appendTo(layero.parent());
+					reloadTree(data.id);
+					form.render();
+				}
 			});
 		}
 	});
@@ -143,44 +181,28 @@ function initForm() {
 	form.verify({
 		name : function(value) {
 			if (value == null || value == "") {
-				return '用户名不能为空!';
+				return '角色名称不能为空!';
 			}
-			if (value.length > 20) {
-				return '用户名长度不能超过10个字符!';
-			}
-		},
-		username : function(value) {
-			if (value == null || value == "") {
-				return '账号不能为空!';
-			}
-			if (value.length > 20) {
-				return '账号长度不能超过20个字符!';
-			}
-		},
-		password : function(value) {
-			if (value == null || value == "") {
-				return '密码不能为空!';
-			}
-			if (value.length > 20) {
-				return '密码长度不能超过20个字符!';
+			if (value.length > 10) {
+				return '角色名称长度不能超过10个字符!';
 			}
 		}
 	});
 	// 提交表单
-	form.on('submit(submitUser)', function(data) {
+	form.on('submit(submitRole)', function(data) {
 		if (curType == "insert") {
-			insertUser(data.field);
+			insertRole(data.field);
 		} else if (curType == "update") {
-			updateUser(data.field);
+			updateRole(data.field);
 		}
 		return false;
 	});
 }
 
-// 删除用户
-function deleteUser(id) {
+// 删除角色
+function deleteRole(id) {
 	$.ajax({
-		url : "/user/deleteUser",
+		url : "/user/deleteRole",
 		type : "post",
 		dataType : "json",
 		data : {
@@ -206,87 +228,92 @@ function deleteUser(id) {
 // 表格数据重载
 function tableReload() {
 	table.reload('grid', {
-		url : "/user/getDataPage",
-		where : {}
+		url : "/user/getRolePage",
+		where : {},
+		page : {
+			curr : 1
+		// 重新从第 1 页开始
+		}
 	});
 }
 
-// 添加用户
-function insertUser(data) {
+// 添加角色
+function insertRole(data) {
 	$.ajax({
-		url : "/user/insertUser",
+		url : "/user/insertRole",
 		type : "post",
-		contentType: "application/json; charset=utf-8", 
+		contentType : "application/json; charset=utf-8",
 		dataType : "json",
 		data : JSON.stringify({
-			"name" : data.name,
-			"username" : data.username,
-			"password" : data.password,
-			"role_id" : data.role
+			"name" : data.name
 		}),
 		success : function(response) {
 			if (response.code == "200") {
 				layer.msg(response.message, {
 					icon : 1
 				});
+				layer.close(curOpen);
+				tableReload();
 			} else {
 				layer.msg(response.message, {
 					icon : 5
 				});
 			}
-			layer.close(curOpen);
-			tableReload();
 		},
 		error : function(error) {
 		}
 	});
 }
 
-// 修改用户
-function updateUser(data) {
+// 修改角色
+function updateRole(data) {
 	$.ajax({
-		url : "/user/updateUser",
+		url : "/user/updateRole",
 		dataType : "json",
 		type : "post",
-		contentType: "application/json; charset=utf-8", 
+		contentType : "application/json; charset=utf-8",
 		data : JSON.stringify({
 			"id" : curID,
-			"name" : data.name,
-			"username" : data.username,
-			"password" : data.password,
-			"role_id" : data.role
+			"name" : data.name
 		}),
 		success : function(response) {
 			if (response.code == "200") {
 				layer.msg(response.message, {
 					icon : 1
 				});
+				layer.close(curOpen);
+				tableReload();
 			} else {
 				layer.msg(response.message, {
 					icon : 5
 				});
 			}
-			layer.close(curOpen);
-			tableReload();
 		},
 		error : function(error) {
 		}
 	});
 }
 
-// 获取角色
-function getRole(roleid) {
+function submit() {
+	var checkedData = tree.getChecked('tree'); // 获取选中节点的数据
 	$.ajax({
-		url : "/user/getRole",
+		url : "/user/insertRoleMenu?id=" + curID,
 		dataType : "json",
-		data : {},
+		type : "post",
+		contentType : "application/json; charset=utf-8",
+		data : JSON.stringify(checkedData),
 		success : function(response) {
-			var roleStr = "<option value=''>请选择角色</option>";
-			for (var i = 0; i < response.data.length; i++) {
-				roleStr += "<option value='" + response.data[i].id + "'>"
-						+ response.data[i].name + "</option>";
+			if (response.code == "200") {
+				layer.msg(response.message, {
+					icon : 1
+				});
+				layer.close(curOpen);
+				tableReload();
+			} else {
+				layer.msg(response.message, {
+					icon : 5
+				});
 			}
-			$("#role").html(roleStr);
 		},
 		error : function(error) {
 		}

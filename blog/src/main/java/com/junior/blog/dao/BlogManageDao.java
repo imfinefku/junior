@@ -31,4 +31,6 @@ public interface BlogManageDao {
 	public int insertBlog(Blog blog);
 
 	public int updateBlog(Blog blog);
+
+	public List<Tag> getAllTag();
 }
