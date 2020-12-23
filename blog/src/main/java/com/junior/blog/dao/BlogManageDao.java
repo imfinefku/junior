@@ -33,4 +33,6 @@ public interface BlogManageDao {
 	public int updateBlog(Blog blog);
 
 	public List<Tag> getAllTag();
+
+	public Blog getBlogById(@Param("id") String id);
 }

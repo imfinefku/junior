@@ -69,4 +69,8 @@ public class BlogManageService {
 	public List<Tag> getAllTag() {
 		return dao.getAllTag();
 	}
+
+	public Blog getBlogById(String id) {
+		return dao.getBlogById(id);
+	}
 }

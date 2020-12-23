@@ -35,13 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin().loginPage("/user/unloginRequestDeal")// 定义当需要用户登录时候，转到的登录页面。
 				.successHandler(user)// 登录成功跳转接口
 				.failureHandler(user)// 登录失败跳转接口
-				.loginProcessingUrl("/login")//登录校验url
+				.loginProcessingUrl("/login")// 登录校验url
 				.and().authorizeRequests() // 定义哪些URL需要被保护、哪些不需要被保护
-				.antMatchers("/user/unloginRequestDeal", "/login", "/login.html", "/", "/js/*", "/css/*", "/view/*",
-						"/layui/*")
+				.antMatchers("/user/unloginRequestDeal", "/login", "/login.html","/index.html", "/", "/js/**", "/css/**", "/view/**",
+						"/layui/**", "/showImage/**")
 				.permitAll().anyRequest() // 任何请求,登录后可以访问
 				.authenticated().and().csrf().disable();
-		http.logout().logoutSuccessHandler(user);//注销
-		http.headers().frameOptions().sameOrigin();//允许同域名下的http页面嵌套再iframe中
+		http.logout().logoutSuccessHandler(user);// 注销
+		http.headers().frameOptions().sameOrigin();// 允许同域名下的http页面嵌套再iframe中
 	}
 }

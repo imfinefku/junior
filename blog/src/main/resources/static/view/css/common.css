@@ -1,0 +1,35 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#header {
+	width: 100%;
+	background: #2E2E2E;
+	height: 55px;
+}
+
+#bottom {
+	height: 55px;
+	width: 100%;
+	background: #2E2E2E;
+	bottom: 0;
+	left: 0;
+	position: absolute;
+}
+
+#mid {
+	background: white;
+	width: 73.5%;
+	margin-left: 13.25%;
+	margin-right: 13.25%;
+	overflow: auto;
+	padding-bottom: 55px;
+}
+
+#container {
+	background: #E6E6E6;
+	position: relative;
+	min-height: 100%;
+}

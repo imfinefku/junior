@@ -23,6 +23,16 @@ public class CommonResult<T> {
 	/** 返回数据 */
 	private T data;
 
+	/** 数据总量 */
+	private int count;
+
+	private CommonResult(int code, String message, T data, int count) {
+		this.code = code;
+		this.message = message;
+		this.data = data;
+		this.count = count;
+	}
+
 	private CommonResult(int code, String message, T data) {
 		this.code = code;
 		this.message = message;
@@ -53,6 +63,14 @@ public class CommonResult<T> {
 		this.data = data;
 	}
 
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	/**
 	 * 成功
 	 * 
@@ -70,6 +88,16 @@ public class CommonResult<T> {
 	 */
 	public static <T> CommonResult<T> success(T data) {
 		return new CommonResult<T>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+	}
+
+	/**
+	 * 成功
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static <T> CommonResult<T> success(T data, int count) {
+		return new CommonResult<T>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data, count);
 	}
 
 	/**
@@ -122,6 +150,7 @@ public class CommonResult<T> {
 
 	/**
 	 * 参数校验失败
+	 * 
 	 * @param bindingResult
 	 * @return
 	 */
