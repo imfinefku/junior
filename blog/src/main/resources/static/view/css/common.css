@@ -20,12 +20,12 @@ html, body {
 }
 
 #mid {
-	background: white;
 	width: 73.5%;
 	margin-left: 13.25%;
 	margin-right: 13.25%;
 	overflow: auto;
 	padding-bottom: 55px;
+	margin-top:35px;
 }
 
 #container {

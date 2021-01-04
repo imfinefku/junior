@@ -22,6 +22,9 @@ public class Tag implements Serializable {
 	
 	/** 添加时间 */
 	private long addtime;
+	
+	/** 对应博客数量 */
+	private int num;
 
 	public String getId() {
 		return id;
@@ -45,5 +48,13 @@ public class Tag implements Serializable {
 
 	public void setAddtime(long addtime) {
 		this.addtime = addtime;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
 	}
 }

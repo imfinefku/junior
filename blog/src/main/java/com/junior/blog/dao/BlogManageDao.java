@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.junior.blog.domain.Blog;
+import com.junior.blog.domain.Friend;
 import com.junior.blog.domain.Tag;
 
 public interface BlogManageDao {
@@ -35,4 +36,18 @@ public interface BlogManageDao {
 	public List<Tag> getAllTag();
 
 	public Blog getBlogById(@Param("id") String id);
+
+	public int addHits(@Param("id") String id);
+
+	public List<Blog> getViewBlogPage(Map map);
+
+	public int getViewBlogPageCount(Map map);
+
+	public List<Blog> getLastAndNext(@Param("id") String id);
+
+	public int addLikeNum(@Param("id") String id);
+
+	public List<Tag> getViewTags();
+	
+	public List<Friend> getViewFriends();
 }

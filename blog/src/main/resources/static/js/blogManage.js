@@ -69,9 +69,9 @@ function initTable() {
 							title : '标签'
 						},
 						{
-							field : 'author',
+							field : 'hits',
 							width : 80,
-							title : '作者'
+							title : '点击量'
 						},
 						{
 							field : 'addtime',

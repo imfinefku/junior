@@ -70,6 +70,18 @@ function initForm() {
 			});
 			return false;
 		}
+		if ($("#summary").val() == null || $("#summary").val() == "") {
+			layer.msg("摘要不能为空", {
+				icon : 5
+			});
+			return false;
+		}
+		if ($("#summary").val().length > 100) {
+			layer.msg("摘要长度不能大于100个字符", {
+				icon : 5
+			});
+			return false;
+		}
 		if (curType == "insert") {// 添加文章
 			insertBlog();
 		} else if (curType == "update") {// 编辑文章
@@ -127,13 +139,14 @@ function addTextData(data) {
 function setValue() {
 	if (response != null && response != "") {
 		// 为表单赋值
-        $("#title").val(response.title);
-        $("#tag").val(response.tag_id);
+		$("#title").val(response.title);
+		$("#tag").val(response.tag_id);
+		$("#summary").val(response.summary);
 		if (response.picture != null && response.picture != "") {
 			document.getElementById("imageXs").src = response.picture;
 			imgUrl = response.picture;
 		}
-		layedit.setContent(index,response.content);
+		layedit.setContent(index, response.content);
 	}
 }
 
@@ -152,6 +165,7 @@ function insertBlog() {
 			"title" : $("#title").val(),
 			"content" : layedit.getContent(index),
 			"tag_id" : $("#tag").val(),
+			"summary" : $("#summary").val(),
 			"picture" : imgUrl
 		}),
 		success : function(response) {
@@ -168,17 +182,18 @@ function insertBlog() {
 	});
 }
 
-function updateBlog(){
+function updateBlog() {
 	$.ajax({
 		url : "/blogManage/updateBlog",
 		dataType : "json",
 		type : "post",
 		contentType : "application/json; charset=utf-8",
 		data : JSON.stringify({
-			"id":response.id,
+			"id" : response.id,
 			"title" : $("#title").val(),
 			"content" : layedit.getContent(index),
 			"tag_id" : $("#tag").val(),
+			"summary" : $("#summary").val(),
 			"picture" : imgUrl
 		}),
 		success : function(response) {

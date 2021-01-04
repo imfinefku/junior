@@ -254,30 +254,6 @@ public class SystemManageController {
 	}
 
 	/**
-	 * 添加友链
-	 * 
-	 * @param request
-	 * @param friend
-	 * @param bindingResult
-	 * @return
-	 */
-	@PostMapping("/insertFriend")
-	public CommonResult insertFriend(HttpServletRequest request, @Validated @RequestBody Friend friend,
-			BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return CommonResult.checkError(bindingResult);
-		}
-		friend.setId(UUID.randomUUID().toString());
-		friend.setAddtime(new Date().getTime());
-		friend.setOrders(service.findFriendMaxOrders());
-		int result = service.insertFriend(friend);
-		if (result > 0) {
-			return CommonResult.success();
-		}
-		return CommonResult.failed();
-	}
-
-	/**
 	 * 修改友链
 	 * 
 	 * @param request

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.junior.blog.dao.BlogManageDao;
 import com.junior.blog.domain.Blog;
+import com.junior.blog.domain.Friend;
 import com.junior.blog.domain.Tag;
 
 /**
@@ -72,5 +73,33 @@ public class BlogManageService {
 
 	public Blog getBlogById(String id) {
 		return dao.getBlogById(id);
+	}
+
+	public int addHits(String id) {
+		return dao.addHits(id);
+	}
+
+	public List<Blog> getViewBlogPage(Map map) {
+		return dao.getViewBlogPage(map);
+	}
+
+	public int getViewBlogPageCount(Map map) {
+		return dao.getViewBlogPageCount(map);
+	}
+
+	public List<Blog> getLastAndNext(String id) {
+		return dao.getLastAndNext(id);
+	}
+
+	public int addLikeNum(String id) {
+		return dao.addLikeNum(id);
+	}
+
+	public List<Tag> getViewTags() {
+		return dao.getViewTags();
+	}
+
+	public List<Friend> getViewFriends() {
+		return dao.getViewFriends();
 	}
 }

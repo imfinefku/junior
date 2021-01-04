@@ -106,4 +106,8 @@ public class SystemManageService {
 	public int updateFriend(Friend friend) {
 		return dao.updateFriend(friend);
 	}
+
+	public int insertFriendApply(FriendApply friendApply) {
+		return dao.insertFriendApply(friendApply);
+	}
 }

@@ -28,6 +28,10 @@ public class Blog implements Serializable {
 	@NotEmpty(message = "标题不能为空")
 	@Length(max = 30, message = "标题不能超过30个字符")
 	private String title;
+	/** 摘要 */
+	@NotEmpty(message = "摘要不能为空")
+	@Length(max = 100, message = "摘要不能超过100个字符")
+	private String summary;
 	/** 内容 */
 	@NotEmpty(message = "博客内容不能为空")
 	private String content;
@@ -48,6 +52,16 @@ public class Blog implements Serializable {
 	private long addtime;
 	/** 修改时间 */
 	private long updatetime;
+	/** 点击量 */
+	private long hits;
+	/** 上一篇id */
+	private String last;
+	/** 下一篇 id */
+	private String next;
+	/** 上一篇名称 */
+	private String lastTitle;
+	/** 下一篇名称 */
+	private String nextTitle;
 
 	public String getId() {
 		return id;
@@ -63,6 +77,14 @@ public class Blog implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
 	public String getContent() {
@@ -135,5 +157,45 @@ public class Blog implements Serializable {
 
 	public void setUpdatetime(long updatetime) {
 		this.updatetime = updatetime;
+	}
+
+	public long getHits() {
+		return hits;
+	}
+
+	public void setHits(long hits) {
+		this.hits = hits;
+	}
+
+	public String getLast() {
+		return last;
+	}
+
+	public void setLast(String last) {
+		this.last = last;
+	}
+
+	public String getNext() {
+		return next;
+	}
+
+	public void setNext(String next) {
+		this.next = next;
+	}
+
+	public String getLastTitle() {
+		return lastTitle;
+	}
+
+	public void setLastTitle(String lastTitle) {
+		this.lastTitle = lastTitle;
+	}
+
+	public String getNextTitle() {
+		return nextTitle;
+	}
+
+	public void setNextTitle(String nextTitle) {
+		this.nextTitle = nextTitle;
 	}
 }

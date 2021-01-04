@@ -9,7 +9,7 @@
 		<Property name="PID">????</Property>
 		<Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
 		<Property name="LOG_LEVEL_PATTERN">%5p</Property>
-		<Property name="LOG_FILE">sz.log</Property>
+		<Property name="LOG_FILE">blog.log</Property>
 		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
 	</Properties>
 	<!--先定义所有的appender-->
@@ -22,7 +22,7 @@
 		
 		<!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
 		
-		<RollingFile name="File" fileName="${sys:user.dir}/agrijlogs/${sys:LOG_FILE}" filePattern="${sys:user.dir}/agrijlogs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
+		<RollingFile name="File" fileName="${sys:user.dir}/juniorlogs/${sys:LOG_FILE}" filePattern="${sys:user.dir}/agrijlogs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
 			<!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->       
 			<!-- 可以用两个ThresholdFilter来实现单个log级别的过滤功能 -->
             <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>

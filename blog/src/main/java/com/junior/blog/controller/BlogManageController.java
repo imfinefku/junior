@@ -228,7 +228,7 @@ public class BlogManageController {
 		String oriname = file.getOriginalFilename();
 		String suffixName = oriname.substring(oriname.lastIndexOf("."));
 		String fileName = UUID.randomUUID().toString() + suffixName;
-		String filePath = imageSavePath + "\\" + fileName;
+		String filePath = imageSavePath + "/" + fileName;
 		File dest = new File(filePath);
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdirs();
@@ -296,9 +296,10 @@ public class BlogManageController {
 		}
 		return CommonResult.success();
 	}
-	
+
 	/**
 	 * 获取所有的标签
+	 * 
 	 * @param request
 	 * @return
 	 */

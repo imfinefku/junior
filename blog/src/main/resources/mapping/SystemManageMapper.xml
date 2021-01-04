@@ -37,7 +37,7 @@
 		resultType="com.junior.blog.domain.FriendApply">
 		select *
 		from sys_friend_apply
-		order by applytime,status
+		order by status,applytime
 		limit #{start},#{limit}
 	</select>
 	<select id="getFriendApplyPageCount" parameterType="Map"
@@ -97,5 +97,11 @@
 		set name=#{name},url=#{url},orders=#{orders}
 		where id=#{id}
 	</update>
+	<insert id="insertFriendApply"
+		parameterType="com.junior.blog.domain.FriendApply">
+		insert into
+		sys_friend_apply(id,name,url,applytime,status)
+		values(#{id},#{name},#{url},#{applytime},#{status})
+	</insert>
 </mapper> 
 

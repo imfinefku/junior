@@ -37,14 +37,19 @@
 		resultType="com.junior.blog.domain.Blog">
 		select b.id,b.title,b.content,u.name author,t.id
 		tag_id,t.name tag_name,b.likenum,
-		b.status,b.addtime,b.updatetime,b.picture
+		b.status,b.addtime,b.updatetime,b.picture,b.hits,b.summary
 		from
-		b_blog b,sys_user u,b_tag t
+		b_blog
+		b,sys_user
+		u,b_tag
+		t
 		where b.author=u.id
 		and b.tag_id=t.id
 		order
-		by b.addtime desc
-		limit #{start},#{limit}
+		by
+		b.addtime desc
+		limit
+		#{start},#{limit}
 	</select>
 	<select id="getBlogPageCount" parameterType="Map"
 		resultType="Integer">
@@ -63,28 +68,106 @@
 	</delete>
 	<insert id="insertBlog"
 		parameterType="com.junior.blog.domain.Blog">
-		insert into b_blog(id,title,picture,content,author,tag_id,likenum,status,addtime,updatetime)
-		values(#{id},#{title},#{picture},#{content},#{author},#{tag_id},#{likenum},#{status},#{addtime},#{updatetime})
+		insert into
+		b_blog(id,title,picture,content,author,tag_id,likenum,status,addtime,updatetime,hits,summary)
+		values(#{id},#{title},#{picture},#{content},#{author},#{tag_id},#{likenum},#{status},#{addtime},#{updatetime},#{hits},#{summary})
 	</insert>
 	<update id="updateBlog"
 		parameterType="com.junior.blog.domain.Blog">
 		update b_blog
-		set title=#{title},picture=#{picture},content=#{content},tag_id=#{tag_id},updatetime=#{updatetime}
+		set
+		title=#{title},picture=#{picture},content=#{content},tag_id=#{tag_id},updatetime=#{updatetime},summary=#{summary}
 		where id=#{id}
 	</update>
 	<select id="getAllTag" resultType="com.junior.blog.domain.Tag">
 		select *
 		from b_tag
 	</select>
-	<select id="getBlogById" resultType="com.junior.blog.domain.Blog">
+	<select id="getBlogById"
+		resultType="com.junior.blog.domain.Blog">
 		select b.id,b.title,b.content,u.name author,t.id
 		tag_id,t.name tag_name,b.likenum,
-		b.status,b.addtime,b.updatetime,b.picture
+		b.status,b.addtime,b.updatetime,b.picture,b.hits,b.summary
 		from
-		b_blog b,sys_user u,b_tag t
+		b_blog
+		b,sys_user u,b_tag
+		t
 		where b.author=u.id
 		and b.tag_id=t.id
 		and b.id=#{id}
 	</select>
+	<update id="addHits">
+		update b_blog
+		set hits=hits+1
+		where id=#{id}
+	</update>
+	<select id="getViewBlogPage" parameterType="Map"
+		resultType="com.junior.blog.domain.Blog">
+		select b.id,b.title,b.content,u.name author,t.id
+		tag_id,t.name tag_name,b.likenum,
+		b.status,b.addtime,b.updatetime,b.picture,b.hits,b.summary
+		from
+		b_blog
+		b,sys_user
+		u,b_tag
+		t
+		where b.author=u.id
+		and b.tag_id=t.id
+		and b.status=1
+		order
+		by b.addtime desc
+		limit
+		#{start},#{limit}
+	</select>
+	<select id="getViewBlogPageCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from b_blog
+		where status=1
+	</select>
+	<select id="getLastAndNext"
+		resultType="com.junior.blog.domain.Blog">
+		select a.rownum,a.id,a.title
+		from (
+		select @rownum:=@rownum+1 as
+		rownum,id,title
+		from b_blog,(select
+		@rownum:=0) rownum
+		order by addtime
+		desc
+		)
+		a,(select temp.rownum from (
+		select @rownum:=@rownum+1 as
+		rownum,id
+		from b_blog,(select
+		@rownum:=0) rownum
+		order by addtime desc
+		)
+		temp
+		where
+		temp.id=#{id}
+		) b
+		where a.rownum<![CDATA[ >= ]]>b.rownum-1
+		and
+		a.rownum<![CDATA[ <= ]]>b.rownum+1
+	</select>
+	<update id="addLikeNum">
+		update b_blog
+		set likenum=likenum+1
+		where id=#{id}
+	</update>
+	<select id="getViewTags" resultType="com.junior.blog.domain.Tag">
+		select t.id,t.name,count(*)
+		num
+		from b_tag t,b_blog b
+		where t.id=b.tag_id
+		group by t.id
+	</select>
+	<select id="getViewFriends"
+		resultType="com.junior.blog.domain.Friend">
+		select *
+		from sys_friend
+		where status=0
+		order by addtime
+	</select>
 </mapper> 
-

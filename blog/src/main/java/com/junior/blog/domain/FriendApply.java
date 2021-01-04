@@ -2,6 +2,10 @@ package com.junior.blog.domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 /**
  * 友链申请表
  * 
@@ -22,8 +26,12 @@ public class FriendApply implements Serializable {
 	/** id */
 	private String id;
 	/** 网站名称 */
+	@NotEmpty(message = "网站名称不能为空")
+	@Length(max = 10, message = "网站名称不能超过10个字符")
 	private String name;
 	/** 地址 */
+	@NotEmpty(message = "网址不能为空")
+	@Length(max = 100, message = "网址不能超过100个字符")
 	private String url;
 	/** 申请时间 */
 	private long applytime;

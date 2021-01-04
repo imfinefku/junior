@@ -42,4 +42,6 @@ public interface SystemManageDao {
 	public int deleteFriend(@Param("id") String id);
 
 	public int updateFriend(Friend friend);
+
+	public int insertFriendApply(FriendApply friendApply);
 }
