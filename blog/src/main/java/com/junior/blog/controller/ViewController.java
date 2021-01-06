@@ -51,11 +51,13 @@ public class ViewController {
 	 * @return
 	 */
 	@GetMapping("/getIndexBlogPage")
-	public CommonResult getIndexBlogPage(@RequestParam int page, @RequestParam int limit) {
+	public CommonResult getIndexBlogPage(HttpServletRequest request, @RequestParam int page, @RequestParam int limit) {
+		String tag_id = request.getParameter("tag_id") == null ? "" : request.getParameter("tag_id");
 		int start = limit * page - limit;
 		Map dataMap = new HashMap();
 		dataMap.put("start", start);
 		dataMap.put("limit", limit);
+		dataMap.put("tag_id", tag_id);
 		List<Blog> rtnList = blogManageService.getViewBlogPage(dataMap);
 		int count = blogManageService.getViewBlogPageCount(dataMap);
 		return CommonResult.success(rtnList, count);
@@ -150,6 +152,10 @@ public class ViewController {
 		if (bindingResult.hasErrors()) {
 			return CommonResult.checkError(bindingResult);
 		}
+		boolean repeat = systemManageService.checkEmailRepeat(subscribe.getEmail());
+		if (repeat) {
+			return CommonResult.failed("该邮箱已订阅");
+		}
 		subscribe.setId(UUID.randomUUID().toString());
 		Date curDate = new Date();
 		subscribe.setAddtime(curDate.getTime());
@@ -174,6 +180,16 @@ public class ViewController {
 		if (bindingResult.hasErrors()) {
 			return CommonResult.checkError(bindingResult);
 		}
+		// 检查申请列表
+		boolean friendApplyRepeat = systemManageService.checkFriendApplyRepeat(friendApply.getUrl());
+		if (friendApplyRepeat) {
+			return CommonResult.failed("该网址已在申请列表中，请等待站长审核");
+		}
+		// 检查已有友链
+		boolean friendRepeat = systemManageService.checkFriendRepeat(friendApply.getUrl());
+		if (friendRepeat) {
+			return CommonResult.failed("该网址已是本站友链");
+		}
 		friendApply.setId(UUID.randomUUID().toString());
 		friendApply.setApplytime(new Date().getTime());
 		int result = systemManageService.insertFriendApply(friendApply);
@@ -181,5 +197,14 @@ public class ViewController {
 			return CommonResult.success();
 		}
 		return CommonResult.failed();
+	}
+	
+	/**
+	 * 防止写博客期间session过期接口
+	 * @return
+	 */
+	@PostMapping("/preventTimeOut")
+	public CommonResult preventTimeOut() {
+		return CommonResult.success();
 	}
 }

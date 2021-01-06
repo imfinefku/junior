@@ -1,11 +1,18 @@
 var id = "";
+var zan = false;
 
 window.onload = function() {
 	initTopAndBottom();
+	initLayui();
 	id = getQueryVariable("id");
 	initData();
 	addHits(id);
 };
+
+function initLayui() {
+	layui.use([ 'layer' ], function() {
+	});
+}
 
 function initData() {
 	if (id != null && id != "") {
@@ -27,17 +34,24 @@ function initData() {
 								+ getDate(response.data.addtime)
 								+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;浏览："
 								+ response.data.hits
+								+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='background:#F4650E;color:white;padding:2px;cursor: pointer;border-radius:5px;' onclick=\"searchTagBlog('"
+								+ response.data.tag_id
+								+ "','"
+								+ response.data.tag_name
+								+ "')\">"
+								+ response.data.tag_name
+								+ "</span>"
 								+ "</div>"
-								+ "<div style='text-align:left;width:100%;color:#888888;background:#F6F6F6;margin-top:10px;margin-bottom:10px;'>简介："
+								+ "<div style='text-align:left;width:100%;color:#888888;background:#F6F6F6;margin-top:10px;margin-bottom:10px;line-height:23px;'>简介："
 								+ response.data.summary
 								+ "</div>"
 								+ "<div style='width:100%;line-height:23px;'>"
 								+ response.data.content
-								+ "</div><div style='width:100%;margin-bottom:10px;margin-top:10px;text-align:center;line-height:23px;'><a href=\"javascript:addLikeNum('"
+								+ "</div><div id='dianzan' style='width:100%;margin-bottom:10px;margin-top:10px;text-align:center;line-height:23px;display: flex;justify-content: center;align-items: center;padding-bottom:10px;'><div onclick=\"addLikeNum('"
 								+ response.data.id
-								+ "')\" style='background:red;color:white;height:30px;width:200px;'>赞一下(<font id='likenum'>"
+								+ "')\" style='background:red;color:white;height:30px;width:100px;line-height:30px;cursor: pointer;border-radius:10px;'><i class='layui-icon layui-icon-praise' style='vertical-align: -8%;'></i>(<font id='likenum'>"
 								+ response.data.likenum
-								+ "</font>)</a></div></div>";
+								+ "</font>)</div></div></div>";
 						var last = "没有了";
 						var next = "没有了";
 						if (response.data.last != null) {
@@ -80,19 +94,26 @@ function addHits(id) {
 }
 
 function addLikeNum(id) {
-	$("#likenum").html(parseInt($("#likenum").html()) + 1);
-	$.ajax({
-		url : "/view/addLikeNum",
-		type : "post",
-		dataType : "json",
-		data : {
-			"id" : id
-		},
-		success : function(response) {
-		},
-		error : function(error) {
-		}
-	});
+	if (!zan) {
+		$("#likenum").html(parseInt($("#likenum").html()) + 1);
+		zan = true;
+		layer.msg("感谢您的点赞", {
+			icon : 1
+		});
+		$.ajax({
+			url : "/view/addLikeNum",
+			type : "post",
+			dataType : "json",
+			data : {
+				"id" : id
+			},
+			success : function(response) {
+			},
+			error : function(error) {
+			}
+		});
+	}
+
 }
 
 function getDate(timestamp) {

@@ -103,5 +103,20 @@
 		sys_friend_apply(id,name,url,applytime,status)
 		values(#{id},#{name},#{url},#{applytime},#{status})
 	</insert>
+	<select id="findCountByEmail" resultType="Integer">
+		select count(*)
+		from sys_subscribe
+		where email=#{email}
+	</select>
+	<select id="findCountByFriend" resultType="Integer">
+		select count(*)
+		from sys_friend
+		where url=#{url}
+	</select>
+	<select id="findCountByFriendApply" resultType="Integer">
+		select count(*)
+		from sys_friend_apply
+		where url=#{url}
+	</select>
 </mapper> 
 

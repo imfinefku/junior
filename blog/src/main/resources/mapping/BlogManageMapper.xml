@@ -104,7 +104,8 @@
 	<select id="getViewBlogPage" parameterType="Map"
 		resultType="com.junior.blog.domain.Blog">
 		select b.id,b.title,b.content,u.name author,t.id
-		tag_id,t.name tag_name,b.likenum,
+		tag_id,t.name
+		tag_name,b.likenum,
 		b.status,b.addtime,b.updatetime,b.picture,b.hits,b.summary
 		from
 		b_blog
@@ -114,6 +115,9 @@
 		where b.author=u.id
 		and b.tag_id=t.id
 		and b.status=1
+		<if test="tag_id != null and tag_id != ''">
+			and b.tag_id = #{tag_id}
+		</if>
 		order
 		by b.addtime desc
 		limit
@@ -122,8 +126,17 @@
 	<select id="getViewBlogPageCount" parameterType="Map"
 		resultType="Integer">
 		select count(*)
-		from b_blog
-		where status=1
+		from
+		b_blog
+		b,sys_user
+		u,b_tag
+		t
+		where b.author=u.id
+		and b.tag_id=t.id
+		and b.status=1
+		<if test="tag_id != null and tag_id != ''">
+			and b.tag_id = #{tag_id}
+		</if>
 	</select>
 	<select id="getLastAndNext"
 		resultType="com.junior.blog.domain.Blog">

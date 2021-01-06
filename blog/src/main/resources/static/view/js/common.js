@@ -22,5 +22,9 @@ function getQueryVariable(param) {
 			return pair[1];
 		}
 	}
-	return (false);
+	return "";
+}
+
+function searchTagBlog(id, name) {
+	window.open("/index.html?tag_id=" + id + "&tag_name=" + name);
 }

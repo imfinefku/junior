@@ -9,8 +9,22 @@ var response;
 var index;// 富文本编辑器build返回值
 
 $(function() {
+	setInterval("preventTimeOut()", 1000 * 60 * 5);
 	initLayui();
 });
+
+function preventTimeOut() {
+	$.ajax({
+		url : "/view/preventTimeOut",
+		dataType : "json",
+		type : "post",
+		data : {},
+		success : function(response) {
+		},
+		error : function(error) {
+		}
+	});
+}
 
 // 初始化layui
 function initLayui() {

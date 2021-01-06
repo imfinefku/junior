@@ -44,4 +44,10 @@ public interface SystemManageDao {
 	public int updateFriend(Friend friend);
 
 	public int insertFriendApply(FriendApply friendApply);
+
+	public int findCountByEmail(@Param("email") String email);
+
+	public int findCountByFriend(@Param("url") String url);
+
+	public int findCountByFriendApply(@Param("url") String url);
 }

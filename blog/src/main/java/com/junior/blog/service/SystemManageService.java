@@ -110,4 +110,28 @@ public class SystemManageService {
 	public int insertFriendApply(FriendApply friendApply) {
 		return dao.insertFriendApply(friendApply);
 	}
+
+	public boolean checkEmailRepeat(String email) {
+		int num = dao.findCountByEmail(email);
+		if (num > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkFriendApplyRepeat(String url) {
+		int num = dao.findCountByFriendApply(url);
+		if (num > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkFriendRepeat(String url) {
+		int num = dao.findCountByFriend(url);
+		if (num > 0) {
+			return true;
+		}
+		return false;
+	}
 }

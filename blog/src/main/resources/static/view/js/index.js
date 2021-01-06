@@ -2,8 +2,12 @@ var laypage;// 分页
 var limit = 5;// 每页数据量
 var form;// 表单
 var curOpen;// 当前打开的弹出层
+var tag_id = "";
+var tag_name = "";
 
 window.onload = function() {
+	tag_id = getQueryVariable("tag_id");
+	tag_name = getQueryVariable("tag_name");
 	initTopAndBottom();
 	initLayui();
 	initTag();
@@ -29,7 +33,7 @@ function initForm() {
 			if (value.length > 10) {
 				return '昵称长度不能超过10个字符!';
 			}
-		},		
+		},
 		webname : function(value) {
 			if (value == null || value == "") {
 				return '网站名称不能为空!';
@@ -51,7 +55,7 @@ function initForm() {
 	});
 }
 
-function submitApply(data){
+function submitApply(data) {
 	$.ajax({
 		url : "/view/addFriendAapply",
 		type : "post",
@@ -68,7 +72,7 @@ function submitApply(data){
 				});
 				layer.close(curOpen);
 			} else {
-				layer.msg(response.message + ":" + response.data[0], {
+				layer.msg(response.message, {
 					icon : 5
 				});
 			}
@@ -129,26 +133,31 @@ function friendLoad(url) {
 }
 
 function initTag() {
-	$.ajax({
-		url : "/view/getViewTags",
-		dataType : "json",
-		data : {},
-		success : function(response) {
-			var html = "";
-			for (var i = 0; i < response.data.length; i++) {
-				html += "<div style='float:left;margin-left:10px;'>"
-						+ response.data[i].name + "(" + response.data[i].num
-						+ ")</div>";
-			}
-			$("#tag").html(html);
-			if (html != "") {
-				$("#tag").css("display", "");
-			}
+	$
+			.ajax({
+				url : "/view/getViewTags",
+				dataType : "json",
+				data : {},
+				success : function(response) {
+					var html = "";
+					for (var i = 0; i < response.data.length; i++) {
+						html += "<div onclick=\"searchTagBlog('"
+								+ response.data[i].id
+								+ "','"
+								+ response.data[i].name
+								+ "')\" style='float:left;margin-left:10px;background:#F4650E;color:white;padding:2px;margin:5px;border-radius:5px;cursor: pointer;'>"
+								+ response.data[i].name + "("
+								+ response.data[i].num + ")</div>";
+					}
+					$("#tag").html(html);
+					if (html != "") {
+						$("#tag").css("display", "");
+					}
 
-		},
-		error : function(error) {
-		}
-	});
+				},
+				error : function(error) {
+				}
+			});
 }
 
 function initBlog() {
@@ -157,7 +166,8 @@ function initBlog() {
 		dataType : "json",
 		data : {
 			"page" : 1,
-			"limit" : limit
+			"limit" : limit,
+			"tag_id" : tag_id
 		},
 		success : function(response) {
 			setBlogData(response.data);
@@ -174,7 +184,8 @@ function initBlog() {
 							dataType : "json",
 							data : {
 								"page" : obj.curr, // 得到当前页，以便向服务端请求对应页的数据。
-								"limit" : obj.limit
+								"limit" : obj.limit,
+								"tag_id" : tag_id
 							// 得到每页显示的条数
 							},
 							success : function(response) {
@@ -194,24 +205,35 @@ function initBlog() {
 
 function setBlogData(response) {
 	var str = "";
+	if (tag_id != "") {
+		str += "<div style='width:100%;height:30px;margin-bottom:10px;background:white;line-height:30px;'><font style='margin-left:5%;'>标签为\""
+				+ tag_name + "\"的搜索结果</font></div>";
+	}
 	for (var i = 0; i < response.length; i++) {
-		str += "<div style='width:100%;height:245px;margin-top:1px;background:white;' onclick=\"viewBlog('"
+		str += "<div style='width:100%;height:245px;margin-top:1px;background:white;'><div style='height:50px;line-height:50px;margin-left:5%;font-size:20px;overflow:hidden;cursor: pointer;' onclick=\"viewBlog('"
 				+ response[i].id
-				+ "')\"><div style='height:50px;line-height:50px;margin-left:5%;font-size:20px;overflow:hidden;'>"
+				+ "')\">"
 				+ response[i].title
-				+ "</div><div style='margin-left:5%;margin-right:5%;height:20px;line-height:20px;background:#EAEAEA;margin-bottom:20px;overflow:hidden;'>作者："
-				+ response[i].author
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发布时间："
+				+ "</div><div style='margin-left:5%;margin-right:5%;height:20px;line-height:20px;background:#EAEAEA;margin-bottom:20px;overflow:hidden;'>"
+				+ "发布时间："
 				+ getDate(response[i].addtime)
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;浏览："
-				+ response[i].hits + "</div>";
+				+ response[i].hits
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标签："
+				+ response[i].tag_name + "</div>";
 		if (response[i].picture != null && response[i].picture != "") {
-			str += "<div style='background: url("
+			str += "<div onclick=\"viewBlog('"
+					+ response[i].id
+					+ "')\" style='background: url("
 					+ response[i].picture
-					+ ") repeat;background-size:100% 100%;height:130px;width:35%;margin-left:5%;float:left;'></div><div style='float:left;height:130px;width:52%;margin-left:3%;line-height:23px;overflow:hidden;'>"
+					+ ") repeat;cursor: pointer;background-size:100% 100%;height:130px;width:35%;margin-left:5%;float:left;'></div><div onclick=\"viewBlog('"
+					+ response[i].id
+					+ "')\" style='cursor: pointer;float:left;height:130px;width:52%;margin-left:3%;line-height:23px;overflow:hidden;'>"
 					+ response[i].summary + "</div>";
 		} else {
-			str += "<div style='float:left;height:130px;width:90%;margin-left:5%;line-height:23px;overflow:hidden;'>"
+			str += "<div onclick=\"viewBlog('"
+					+ response[i].id
+					+ "')\" style='cursor: pointer;float:left;height:130px;width:90%;margin-left:5%;line-height:23px;overflow:hidden;'>"
 					+ response[i].summary + "</div>";
 		}
 
@@ -261,7 +283,7 @@ function submitSubscribe(data) {
 				});
 				layer.close(curOpen);
 			} else {
-				layer.msg(response.message + ":" + response.data[0], {
+				layer.msg(response.message, {
 					icon : 5
 				});
 			}
